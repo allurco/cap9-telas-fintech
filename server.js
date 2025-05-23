@@ -27,6 +27,10 @@ app.get('/dashboard', (req, res) => {
     res.sendFile(path.join(__dirname, 'dashboard.html'));
 });
 
+app.get('/conscious-spending', (req, res) => {
+    res.sendFile(path.join(__dirname, 'conscious-spending.html'));
+});
+
 // Handle 404
 app.use((req, res) => {
   res.status(404).sendFile(path.join(__dirname, '404.html'));

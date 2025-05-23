@@ -13,6 +13,7 @@
        
 </head>
 <body class="dashboard">
+    <div class="sidebar-overlay" onclick="closeSidebar()"></div>
     <!-- Sidebar -->
     <nav class="sidebar">
         <div class="sidebar-logo">
@@ -26,9 +27,9 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#conscious-spending">
+                <a class="nav-link" href="/conscious-spending">
                     <i class="bi bi-wallet2"></i>
-                    <span class="en">Conscious Spending</span><span class="pt" style="display:none;">Gastos Conscientes</span>
+                    <span class="en">Spending Plan</span><span class="pt" style="display:none;">Plano de Gastos</span>
                 </a>
             </li>
             <li class="nav-item">
@@ -57,25 +58,32 @@
             </li>
         </ul>
 
+        <div class="sidebar-profile-bar d-flex align-items-center justify-content-between px-3">
+            <div class="d-flex align-items-center gap-2">
+                <div class="user-avatar me-2">JS</div>
+                <div>
+                    <div class="fw-bold en">João Silva</div>
+                    <div class="fw-bold pt" style="display:none;">João Silva</div>
+                    <small class="text-muted">Premium</small>
+                </div>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <button id="themeToggleBtn" class="btn btn-link p-0 m-0 d-flex align-items-center" aria-label="Toggle dark/light mode" title="Toggle dark/light mode">
+                    <i id="themeIcon" class="bi bi-moon"></i>
+                </button>
+                <a href="#settings" class="ms-2"><i class="bi bi-gear" style="font-size:1.3em;"></i></a>
+            </div>
+        </div>
     </nav>
     <!-- Main Content -->
     <div class="main-content">
-        <header class="dashboard-header">
+        <header class="dashboard-header d-flex align-items-center justify-content-between">
+    <button class="burger-menu d-md-none" aria-label="Abrir menu" onclick="openSidebar()">
+        <i class="bi bi-list"></i>
+    </button>
             <h1 class="en">Dashboard</h1>
             <h1 class="pt" style="display:none;">Painel</h1>
-            <div class="d-flex align-items-center gap-3">
-                <button id="themeToggleBtn" class="btn btn-link p-0 m-0 d-flex align-items-center" style="font-size:1.6em;" aria-label="Toggle dark/light mode" title="Toggle dark/light mode">
-                    <i id="themeIcon" class="bi bi-moon"></i>
-                </button>
-                <div class="user-profile">
-                    <div class="user-avatar">JS</div>
-                    <div>
-                        <div class="fw-bold en">João Silva</div>
-                        <div class="fw-bold pt" style="display:none;">João Silva</div>
-                        <small class="text-muted">Premium</small>
-                    </div>
-                </div>
-            </div>
+
         </header>
         <div class="row">
             <div class="col-lg-8">
@@ -231,51 +239,7 @@
             </div>
         </div>
     </div>
-    <script>
-    // Language detection (no switcher)
-    function setLanguage(lang) {
-        var enEls = document.querySelectorAll('.en');
-        var ptEls = document.querySelectorAll('.pt');
-        if (lang === 'pt') {
-            enEls.forEach(el => el.style.display = 'none');
-            ptEls.forEach(el => el.style.display = '');
-        } else {
-            enEls.forEach(el => el.style.display = '');
-            ptEls.forEach(el => el.style.display = 'none');
-        }
-        localStorage.setItem('lang', lang);
-    }
-
-    // Theme switcher logic (icon in header)
-    function setTheme(theme) {
-        var icon = document.getElementById('themeIcon');
-        if (theme === 'light') {
-            document.body.classList.add('light-mode');
-            icon.className = 'bi bi-sun';
-        } else {
-            document.body.classList.remove('light-mode');
-            icon.className = 'bi bi-moon';
-        }
-        localStorage.setItem('theme', theme);
-    }
-    document.getElementById('themeToggleBtn').onclick = function() {
-        var isLight = document.body.classList.contains('light-mode');
-        setTheme(isLight ? 'dark' : 'light');
-    };
-
-    // On load, set language (auto-detect on first visit) and theme
-    window.onload = function() {
-        var lang = localStorage.getItem('lang');
-        if (!lang) {
-            var navLang = (navigator.languages && navigator.languages.length) ? navigator.languages[0] : navigator.language;
-            lang = navLang && navLang.toLowerCase().startsWith('pt') ? 'pt' : 'en';
-            localStorage.setItem('lang', lang);
-        }
-        setLanguage(lang);
-        var theme = localStorage.getItem('theme') || 'dark';
-        setTheme(theme);
-    };
-</script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="main.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
