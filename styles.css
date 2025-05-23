@@ -610,6 +610,12 @@ body.no-scroll {
 }
 
 /* Back link */
+.ba.cs-info {
+    cursor: pointer;
+}
+.cs-info .bi-pencil-fill {
+    color: var(--gold) !important;
+}
 .back-link {
     color: var(--Secondary);
     text-decoration: none;
@@ -641,6 +647,59 @@ body.no-scroll {
     font-size: 0.875rem;
 }
 
+/* Add Row Button - Professional Gold Style */
+.add-row-btn {
+    background: var(--gold);
+    border: none;
+    color: #fff;
+    border-radius: 18px;
+    font-weight: 500;
+    padding: 0.25rem 0.9rem 0.25rem 0.75rem;
+    font-size: 0.95rem;
+    box-shadow: 0 2px 8px 0 rgba(218,190,114,0.10);
+    transition: background 0.18s, color 0.18s, box-shadow 0.18s, transform 0.12s;
+    outline: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    text-transform: none;
+}
+.add-row-btn .bi-plus-circle {
+    color: #fff !important;
+    font-size: 1.1em;
+    margin-right: 0.22em;
+    transition: color 0.18s;
+}
+.add-row-btn:hover, .add-row-btn:focus {
+    background: var(--gold-dark);
+    color: #fff;
+    box-shadow: 0 4px 14px 0 rgba(95,77,29,0.15);
+    transform: translateY(-1px) scale(1.03);
+}
+.add-row-btn:hover .bi-plus-circle, .add-row-btn:focus .bi-plus-circle {
+    color: var(--gold-dark) !important;
+}
+.add-row-btn:active {
+    background: #bfa14c;
+    color: #fff;
+    box-shadow: 0 2px 8px 0 rgba(95,77,29,0.13);
+    transform: scale(0.98);
+}
+.add-row-btn:hover, .add-row-btn:focus {
+    background: var(--gold);
+    color: var(--blue-dark);
+    box-shadow: 0 4px 16px 0 rgba(218,190,114,0.22);
+    transform: translateY(-1px) scale(1.03);
+}
+.add-row-btn:hover .bi-plus-circle, .add-row-btn:focus .bi-plus-circle {
+    color: var(--blue-dark) !important;
+}
+.add-row-btn:active {
+    background: var(--gold-dark);
+    color: #fff;
+    box-shadow: 0 2px 8px 0 rgba(95,77,29,0.13);
+    transform: scale(0.98);
+}
 /* Forgot password link */
 .forgot-password {
     color: var(--Secondary);

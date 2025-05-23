@@ -1,0 +1,14 @@
+{
+  "assets": 600000,
+  "investments": 40000,
+  "savings": 40000,
+  "debts": 5000,
+  "netWorth": 675000,
+  "grossIncome": 15000,
+  "netIncome": 10950,
+  "fixedExpenses": 4000,
+  "totalFixedExpenses": 4000,
+  "investmentFunds": 1000,
+  "emergencyFund": 1600,
+  "freeSpending": 6679
+}

@@ -95,19 +95,25 @@
                         Patrimônio
                     </div>
                     <div class="card-body p-2">
-                        <div class="row g-1 align-items-center">
-                            <div class="col-6">Ativos <i class="bi bi-info-circle cs-info" title="Ativos: tudo que você possui."></i></div>
-                            <div class="col-6 text-end">R$ 600.000,00</div>
-                            <div class="col-6">Investimentos <i class="bi bi-info-circle cs-info" title="Investimentos: aplicações financeiras."></i></div>
-                            <div class="col-6 text-end">R$ 40.000,00</div>
-                            <div class="col-6">Poupança</div>
-                            <div class="col-6 text-end">R$ 40.000,00</div>
-                            <div class="col-6">Dívidas <i class="bi bi-info-circle cs-info" title="Dívidas: valores a pagar."></i></div>
-                            <div class="col-6 text-end">R$ 5.000,00</div>
+                        <div id="assets-row" class="row g-1 align-items-center">
+                            <div id="assets-label" class="col-6">Ativos <i class="bi bi-info-circle cs-info" title="Ativos: tudo que você possui."></i></div>
+                            <div id="assets-value" class="col-6 text-end d-flex align-items-center justify-content-end gap-2"><span class="cs-edit-value" data-key="assets">R$ 600.000,00</span><input type="text" class="edit-input d-none form-control form-control-sm text-end" value="R$ 600.000,00"><button class="btn btn-link p-0 m-0 cs-info" title="Editar" onclick="toggleEdit(this)"><i class="bi bi-pencil-fill"></i></button><button class="btn btn-link p-0 m-0 cs-edit-btn d-none" title="Salvar" onclick="saveEdit(this)"><i class="bi bi-check-lg"></i></button></div>
+                        </div>
+                        <div id="investments-row" class="row g-1 align-items-center">
+                            <div id="investments-label" class="col-6">Investimentos <i class="bi bi-info-circle cs-info" title="Investimentos: aplicações financeiras."></i></div>
+                            <div id="investments-value" class="col-6 text-end d-flex align-items-center justify-content-end gap-2"><span class="cs-edit-value" data-key="investments">R$ 40.000,00</span><input type="text" class="edit-input d-none form-control form-control-sm text-end" value="R$ 40.000,00"><button class="btn btn-link p-0 m-0 cs-info" title="Editar" onclick="toggleEdit(this)"><i class="bi bi-pencil-fill"></i></button><button class="btn btn-link p-0 m-0 cs-edit-btn d-none" title="Salvar" onclick="saveEdit(this)"><i class="bi bi-check-lg"></i></button></div>
+                        </div>
+                        <div id="savings-row" class="row g-1 align-items-center">
+                            <div id="savings-label" class="col-6">Poupança</div>
+                            <div id="investments-value" class="col-6 text-end d-flex align-items-center justify-content-end gap-2"><span class="cs-edit-value" data-key="investments">R$ 40.000,00</span><input type="text" class="edit-input d-none form-control form-control-sm text-end" value="R$ 40.000,00"><button class="btn btn-link p-0 m-0 cs-info" title="Editar" onclick="toggleEdit(this)"><i class="bi bi-pencil-fill"></i></button><button class="btn btn-link p-0 m-0 cs-edit-btn d-none" title="Salvar" onclick="saveEdit(this)"><i class="bi bi-check-lg"></i></button></div>
+                        </div>
+                        <div id="debts-row" class="row g-1 align-items-center">
+                            <div id="debts-label" class="col-6">Dívidas <i class="bi bi-info-circle cs-info" title="Dívidas: valores a pagar."></i></div>
+                            <div id="debts-value" class="col-6 text-end d-flex align-items-center justify-content-end gap-2"><span class="cs-edit-value" data-key="debts">R$ 5.000,00</span><input type="text" class="edit-input d-none form-control form-control-sm text-end" value="R$ 5.000,00"><button class="btn btn-link p-0 m-0 cs-info" title="Editar" onclick="toggleEdit(this)"><i class="bi bi-pencil-fill"></i></button><button class="btn btn-link p-0 m-0 cs-edit-btn d-none" title="Salvar" onclick="saveEdit(this)"><i class="bi bi-check-lg"></i></button></div>
                         </div>
                         <div class="row mt-2">
-                            <div class="col-6 fw-bold text-gold">Patrimônio Total</div>
-                            <div class="col-6 text-end fw-bold text-gold">R$ 675.000,00</div>
+                            <div id="networth-label" class="col-6 fw-bold text-gold">Patrimônio Total</div>
+                            <div id="networth-value" class="col-6 text-end fw-bold text-gold d-flex align-items-center justify-content-end gap-2"><span class="cs-edit-value" data-key="netWorth">R$ 675.000,00</span></div>
                         </div>
                     </div>
                 </div>
@@ -117,11 +123,11 @@
                     <div class="card-body p-2">
                         <div class="row g-1 align-items-center">
                             <div class="col-6">Receita Bruta</div>
-                            <div class="col-6 text-end">R$ 15.000,00</div>
+                            <div class="col-6 text-end d-flex align-items-center justify-content-end gap-2"><span class="cs-edit-value" data-key="grossIncome">R$ 15.000,00</span><input type="text" class="edit-input d-none form-control form-control-sm text-end" value="R$ 15.000,00"><button class="btn btn-link p-0 m-0 cs-info" title="Editar" onclick="toggleEdit(this)"><i class="bi bi-pencil-fill"></i></button><button class="btn btn-link p-0 m-0 cs-edit-btn d-none" title="Salvar" onclick="saveEdit(this)"><i class="bi bi-check-lg"></i></button></div>
                         </div>
                         <div class="row mt-2">
                             <div class="col-6 fw-bold text-gold">Receita Líquida</div>
-                            <div class="col-6 text-end fw-bold text-gold">R$ 10.950,00</div>
+                            <div class="col-6 text-end fw-bold text-gold d-flex align-items-center justify-content-end gap-2"><span class="cs-edit-value" data-key="netIncome">R$ 10.950,00</span><input type="text" class="edit-input d-none form-control form-control-sm text-end fw-bold text-gold" value="R$ 10.950,00"><button class="btn btn-link p-0 m-0 cs-info" title="Editar" onclick="toggleEdit(this)"><i class="bi bi-pencil-fill"></i></button><button class="btn btn-link p-0 m-0 cs-edit-btn d-none" title="Salvar" onclick="saveEdit(this)"><i class="bi bi-check-lg"></i></button></div>
                         </div>
                     </div>
                 </div>
@@ -135,13 +141,16 @@
                     <div class="card-body p-2">
                         <div class="row g-1 align-items-center">
                             <div class="col-8">Aluguel / Financiamento</div>
-                            <div class="col-4 text-end">R$ 4.000,00</div>
+                            <div class="col-4 text-end d-flex align-items-center justify-content-end gap-2"><span class="cs-edit-value">R$ 4.000,00</span><input type="text" class="edit-input d-none form-control form-control-sm text-end" value="R$ 4.000,00"><button class="btn btn-link p-0 m-0 cs-info" title="Editar" onclick="toggleEdit(this)"><i class="bi bi-pencil-fill"></i></button><button class="btn btn-link p-0 m-0 cs-edit-btn d-none" title="Salvar" onclick="saveEdit(this)"><i class="bi bi-check-lg"></i></button></div>
                         </div>
                         <div class="row mt-2">
                             <div class="col-8 fw-bold text-gold">Total Gastos Fixos</div>
-                            <div class="col-4 text-end fw-bold text-gold">R$ 4.000,00</div>
+                            <div class="col-4 text-end fw-bold text-gold d-flex align-items-center justify-content-end gap-2"><span class="cs-edit-value">R$ 4.000,00</span><input type="text" class="edit-input d-none form-control form-control-sm text-end fw-bold text-gold" value="R$ 4.000,00"><button class="btn btn-link p-0 m-0 cs-info" title="Editar" onclick="toggleEdit(this)"><i class="bi bi-pencil-fill"></i></button><button class="btn btn-link p-0 m-0 cs-edit-btn d-none" title="Salvar" onclick="saveEdit(this)"><i class="bi bi-check-lg"></i></button></div>
                         </div>
                     </div>
+                        <div class="text-center mt-2">
+                            <button id="add-fixed-btn" class="btn btn-sm btn-outline-success add-row-btn" type="button"><i class="bi bi-plus-circle"></i> Adicionar linha</button>
+                        </div>
                 </div>
                 <!-- Investimentos -->
                 <div class="card cs-section">
@@ -153,9 +162,12 @@
                     <div class="card-body p-2">
                         <div class="row g-1 align-items-center">
                             <div class="col-8">Fundos de Investimento</div>
-                            <div class="col-4 text-end">R$ 1.000,00</div>
+                            <div class="col-4 text-end d-flex align-items-center justify-content-end gap-2"><span class="cs-edit-value" data-key="investmentFunds">R$ 1.000,00</span><input type="text" class="edit-input d-none form-control form-control-sm text-end" value="R$ 1.000,00"><button class="btn btn-link p-0 m-0 cs-info" title="Editar" onclick="toggleEdit(this)"><i class="bi bi-pencil-fill"></i></button><button class="btn btn-link p-0 m-0 cs-edit-btn d-none" title="Salvar" onclick="saveEdit(this)"><i class="bi bi-check-lg"></i></button></div>
                         </div>
                     </div>
+                        <div class="text-center mt-2">
+                            <button id="add-investment-btn" class="btn btn-sm btn-outline-success add-row-btn" type="button"><i class="bi bi-plus-circle"></i> Adicionar linha</button>
+                        </div>
                 </div>
                 <!-- Poupança/Objetivos -->
                 <div class="card cs-section">
@@ -168,12 +180,16 @@
                         <div class="row g-1 align-items-center">
                             <div class="col-7">Fundo de emergência</div>
                             <div class="col-3 text-end">
-                                <span class="cs-edit-value">R$ 1.600,00</span>
+                                <span class="cs-edit-value" data-key="emergencyFund">R$ 1.600,00</span>
                                 <input type="text" class="edit-input d-none" value="R$ 1.600,00">
                             </div>
                             <div class="col-2 text-end">
-                                <button class="btn btn-link p-0 m-0 cs-info" title="Editar fundo de emergência" onclick="toggleEdit(this)"><i class="bi bi-pencil-fill text-success"></i></button>
+                                <button class="btn btn-link p-0 m-0 cs-info" title="Editar fundo de emergência" onclick="toggleEdit(this)"><i class="bi bi-pencil-fill"></i></button>
                                 <button class="btn btn-link p-0 m-0 cs-edit-btn d-none" title="Salvar" onclick="saveEdit(this)"><i class="bi bi-check-lg"></i></button>
+                            </div>
+                        </div>
+                            <div class="text-center mt-2">
+                                <button id="add-savings-btn" class="btn btn-sm btn-outline-success add-row-btn" type="button"><i class="bi bi-plus-circle"></i> Adicionar linha</button>
                             </div>
                         </div>
                     </div>
@@ -188,7 +204,7 @@
                     <div class="card-body p-2">
                         <div class="row g-1 align-items-center">
                             <div class="col-8">Total para gastos livres</div>
-                            <div class="col-4 text-end">R$ 6.679,00</div>
+                            <div class="col-4 text-end d-flex align-items-center justify-content-end gap-2"><span class="cs-edit-value" data-key="freeSpending">R$ 6.679,00</span><input type="text" class="edit-input d-none form-control form-control-sm text-end" value="R$ 6.679,00"><button class="btn btn-link p-0 m-0 cs-info" title="Editar" onclick="toggleEdit(this)"><i class="bi bi-pencil-fill"></i></button><button class="btn btn-link p-0 m-0 cs-edit-btn d-none" title="Salvar" onclick="saveEdit(this)"><i class="bi bi-check-lg"></i></button></div>
                         </div>
                     </div>
                 </div>
