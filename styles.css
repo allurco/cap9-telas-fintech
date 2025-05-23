@@ -18,6 +18,12 @@ body {
     font-family: 'Roboto', sans-serif;
 }
 
+#main-container {
+    width: 288px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
 .body-login {
     min-height: 100vh;
     width: 100%;
@@ -74,13 +80,6 @@ body {
 }
 
 /* Social login */
-.social-buttons {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    max-width: 240px;
-    margin: 0 auto;
-}
 
 .login-divider {
     flex-grow: 1;
@@ -125,9 +124,6 @@ body {
 }
 
 /* Social Buttons */
-.social-buttons {
-    padding: 0 1rem;
-}
 
 .social-btn {
     display: flex;
