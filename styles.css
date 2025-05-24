@@ -467,6 +467,27 @@ body.dashboard.light-mode .form-check-input:checked {
     border-color: var(--gold-dark);
 }
 
+/* === Modal Theming === */
+.theme-aware-modal {
+    background-color: var(--blue-light);
+    color: var(--text-light);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.dashboard.light-mode .theme-aware-modal {
+    background-color: var(--light-card);
+    color: var(--light-text);
+    border: 1px solid #ced4da;
+}
+
+body.dashboard.light-mode .theme-aware-modal .modal-body {
+    color: var(--light-text);
+}
+
+body.dashboard.light-mode .theme-aware-modal .text-muted {
+    color: #6c757d !important;
+}
+
 body {
     background-color: var(--primary-bg);
     color: var(--text-light);

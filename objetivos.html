@@ -109,27 +109,53 @@
     <!-- Modal for Adding/Editing Goals -->
     <div class="modal fade" id="goalModal" tabindex="-1" aria-labelledby="goalModalLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <div class="modal-content">
+            <div class="modal-content theme-aware-modal">
                 <div class="modal-header bg-blue text-gold">
                     <h5 class="modal-title" id="goalModalLabel">Novo Objetivo</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="goalForm">
+                    <form id="goalForm" class="needs-validation" novalidate>
                         <input type="hidden" id="goalId" value="">
-                        <div class="mb-3">
-                            <label for="goalName" class="form-label">Nome do Objetivo</label>
-                            <input type="text" class="form-control" id="goalName" required>
+                        <div class="mb-4">
+                            <label for="goalName" class="form-label fw-bold">Nome do Objetivo</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-blue text-gold"><i class="bi bi-bookmark-star"></i></span>
+                                <input type="text" class="form-control" id="goalName" placeholder="Ex: Viagem para Europa" required>
+                                <div class="invalid-feedback">
+                                    Por favor, informe um nome para o objetivo.
+                                </div>
+                            </div>
+                            <small class="text-muted">Dê um nome significativo para seu objetivo financeiro.</small>
+                        </div>
+                        <div class="mb-4">
+                            <label for="goalTarget" class="form-label fw-bold">Valor Alvo (R$)</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-blue text-gold"><i class="bi bi-currency-dollar"></i></span>
+                                <input type="text" class="form-control currency-input" id="goalTarget" placeholder="0,00" required>
+                                <div class="invalid-feedback">
+                                    Por favor, informe um valor alvo válido.
+                                </div>
+                            </div>
+                            <small class="text-muted">Defina quanto você precisa economizar para atingir esse objetivo.</small>
                         </div>
                         <div class="mb-3">
-                            <label for="goalTarget" class="form-label">Valor Alvo (R$)</label>
-                            <input type="text" class="form-control currency-input" id="goalTarget" required>
+                            <label for="goalDate" class="form-label fw-bold">Data Alvo</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-blue text-gold"><i class="bi bi-calendar-event"></i></span>
+                                <input type="date" class="form-control" id="goalDate">
+                            </div>
+                            <small class="text-muted">Opcional: quando você planeja atingir esse objetivo?</small>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-gold" id="saveGoalBtn">Salvar</button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle me-1"></i> Cancelar
+                    </button>
+                    <button type="button" class="btn btn-gold" id="saveGoalBtn">
+                        <i class="bi bi-check-circle me-1"></i> Salvar Objetivo
+                    </button>
                 </div>
             </div>
         </div>
