@@ -20,14 +20,24 @@ function setLanguage(lang) {
 
 // === Theme Toggling ===
 function setTheme(theme) {
-    var icon = document.getElementById('themeIcon');
+    // Update body class
     if (theme === 'light') {
         document.body.classList.add('light-mode');
-        if (icon) icon.className = 'bi bi-sun';
     } else {
         document.body.classList.remove('light-mode');
-        if (icon) icon.className = 'bi bi-moon';
     }
+    
+    // Update all theme icons in the application
+    const themeIcons = document.querySelectorAll('[id^="themeIcon"]');
+    themeIcons.forEach(icon => {
+        if (theme === 'light') {
+            icon.className = 'bi bi-sun';
+        } else {
+            icon.className = 'bi bi-moon';
+        }
+    });
+    
+    // Store preference
     localStorage.setItem('theme', theme);
 }
 
@@ -74,14 +84,36 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Theme toggler
-    var themeToggler = document.getElementById('themeToggler');
-    if (themeToggler) {
-        themeToggler.addEventListener('click', function() {
-            var newTheme = localStorage.getItem('theme') === 'light' ? 'dark' : 'light';
-            setTheme(newTheme);
+    // Theme toggler - handle both theme toggle buttons in the app
+    function setupThemeTogglers() {
+        // Check for both possible theme toggle button IDs
+        const themeTogglers = [
+            document.getElementById('themeToggler'),
+            document.getElementById('themeToggleBtn')
+        ];
+        
+        // Add click listeners to any theme toggle buttons found
+        themeTogglers.forEach(toggler => {
+            if (toggler) {
+                toggler.addEventListener('click', function() {
+                    var newTheme = localStorage.getItem('theme') === 'light' ? 'dark' : 'light';
+                    setTheme(newTheme);
+                });
+            }
+        });
+        
+        // Also handle legacy theme toggle in the sidebar menu if it exists
+        const themeToggleMenuItems = document.querySelectorAll('.theme-toggle button');
+        themeToggleMenuItems.forEach(item => {
+            item.addEventListener('click', function() {
+                var newTheme = localStorage.getItem('theme') === 'light' ? 'dark' : 'light';
+                setTheme(newTheme);
+            });
         });
     }
+    
+    // Set up all theme togglers
+    setupThemeTogglers();
     
     // Mobile menu toggle - attach event listeners to all burger menu buttons
     const burgerMenuButtons = document.querySelectorAll('.burger-menu');
