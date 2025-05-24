@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Swipe e JSON</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+    <style>
+        .swipeable-row-container {
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 5px;
+        }
+        
+        .swipeable-row-actions {
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            display: flex;
+            height: 45px;
+            z-index: 1;
+        }
+        
+        .swipe-action {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            color: white;
+            height: 100%;
+            cursor: pointer;
+        }
+        
+        .swipe-action-edit {
+            background-color: #007bff;
+        }
+        
+        .swipe-action-delete {
+            background-color: #dc3545;
+        }
+        
+        .swipeable-row-content {
+            position: relative;
+            background-color: white;
+            z-index: 2;
+            transition: transform 0.3s ease;
+            height: 48px;
+            display: flex;
+            align-items: center;
+        }
+    </style>
+</head>
+<body class="bg-dark">
+    <div class="container mt-5">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center bg-blue text-gold">
+                <span class="fw-bold">Gastos Fixos</span>
+                <span style="font-size:0.98em; font-weight:400;">(50-60% da receita líquida)</span>
+                <span class="badge bg-dark text-success ms-2">37% <i class="bi bi-arrow-down"></i></span>
+            </div>
+            <div class="card-body p-2" id="fixed-expenses-container">
+                <!-- Rows will be added here from gastos-fixos.json -->
+                <div class="row mt-2">
+                    <div class="col-8 fw-bold text-gold">Total Gastos Fixos</div>
+                    <div class="col-4 text-end fw-bold text-gold d-flex align-items-center justify-content-end gap-2">
+                        <span class="cs-edit-value" id="total-expenses">R$ 0,00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mt-3">
+            <button id="add-test-row" class="btn btn-primary">Adicionar Linha de Teste</button>
+        </div>
+    </div>
+
+    <script>
+        // Format currency in BRL
+        function formatCurrencyBRL(value) {
+            value = value.toString().replace(/\D/g, '');
+            value = (parseInt(value, 10) / 100).toFixed(2) + '';
+            value = value.replace('.', ',');
+            value = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            return 'R$ ' + value;
+        }
+
+        // Initialize swipe functionality for a row
+        function initSwipe(container) {
+            console.log('Initializing swipe for container:', container);
+            const content = container.querySelector('.swipeable-row-content');
+            const actions = container.querySelector('.swipeable-row-actions');
+            
+            if (!content || !actions) {
+                console.error('Missing required elements in container:', container);
+                return;
+            }
+
+            let startX = 0;
+            let currentX = 0;
+            let offsetX = 0;
+            let isSwiping = false;
+            
+            // Helper to get position for both mouse and touch events
+            const getPositionX = (e) => {
+                return e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
+            };
+            
+            // Event handlers for mouse/touch events
+            const handleStart = (e) => {
+                console.log('Start swipe');
+                isSwiping = true;
+                startX = getPositionX(e);
+                currentX = startX;
+                
+                document.addEventListener('mousemove', handleMove);
+                document.addEventListener('touchmove', handleMove);
+                document.addEventListener('mouseup', handleEnd);
+                document.addEventListener('touchend', handleEnd);
+            };
+            
+            const handleMove = (e) => {
+                if (!isSwiping) return;
+                
+                currentX = getPositionX(e);
+                offsetX = currentX - startX;
+                
+                // Restrict to left swipe only (negative offset) and limit the distance
+                if (offsetX < 0) {
+                    const translateX = Math.max(offsetX, -120); // Limit to -120px
+                    content.style.transform = `translateX(${translateX}px)`;
+                    console.log('Swiping, transform:', translateX);
+                }
+            };
+            
+            const handleEnd = () => {
+                isSwiping = false;
+                document.removeEventListener('mousemove', handleMove);
+                document.removeEventListener('touchmove', handleMove);
+                document.removeEventListener('mouseup', handleEnd);
+                document.removeEventListener('touchend', handleEnd);
+                
+                // If swiped far enough, snap to show action buttons
+                if (offsetX < -50) {
+                    content.style.transform = 'translateX(-120px)';
+                    console.log('Snapped open');
+                } else {
+                    content.style.transform = 'translateX(0)';
+                    console.log('Snapped closed');
+                }
+            };
+            
+            // Add event listeners
+            content.addEventListener('mousedown', handleStart);
+            content.addEventListener('touchstart', handleStart);
+            
+            // Set up action buttons
+            const editBtn = container.querySelector('.swipe-action-edit');
+            if (editBtn) {
+                editBtn.addEventListener('click', function() {
+                    alert('Edit button clicked');
+                    // Reset position after clicking
+                    content.style.transform = 'translateX(0)';
+                });
+            }
+            
+            const deleteBtn = container.querySelector('.swipe-action-delete');
+            if (deleteBtn) {
+                deleteBtn.addEventListener('click', function() {
+                    if (confirm('Tem certeza que deseja excluir este item?')) {
+                        container.remove();
+                        updateTotal();
+                    }
+                });
+            }
+            
+            // Close rows when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.swipeable-row-container') && 
+                    !e.target.closest('.swipe-action')) {
+                    // Reset all swiped rows
+                    document.querySelectorAll('.swipeable-row-content').forEach(el => {
+                        el.style.transform = 'translateX(0)';
+                    });
+                }
+            });
+        }
+
+        // Create a swipeable row
+        function createSwipeableRow(expense) {
+            const container = document.createElement('div');
+            container.className = 'swipeable-row-container';
+            
+            const actions = document.createElement('div');
+            actions.className = 'swipeable-row-actions';
+            actions.innerHTML = `
+                <div class="swipe-action swipe-action-edit" data-action="edit">
+                    <i class="bi bi-pencil-fill"></i>
+                </div>
+                <div class="swipe-action swipe-action-delete" data-action="delete">
+                    <i class="bi bi-trash"></i>
+                </div>
+            `;
+            
+            const content = document.createElement('div');
+            content.className = 'swipeable-row-content';
+            
+            const row = document.createElement('div');
+            row.className = 'row g-1 align-items-center';
+            
+            const labelCol = document.createElement('div');
+            labelCol.className = 'col-8';
+            labelCol.textContent = expense.name;
+            
+            const valueCol = document.createElement('div');
+            valueCol.className = 'col-4 text-end d-flex align-items-center justify-content-end gap-2';
+            
+            const valueSpan = document.createElement('span');
+            valueSpan.className = 'cs-edit-value';
+            valueSpan.textContent = formatCurrencyBRL(expense.value.toString());
+            valueSpan.dataset.value = expense.value;
+            
+            valueCol.appendChild(valueSpan);
+            
+            row.appendChild(labelCol);
+            row.appendChild(valueCol);
+            
+            content.appendChild(row);
+            container.appendChild(actions);
+            container.appendChild(content);
+            
+            return container;
+        }
+
+        // Update total expenses
+        function updateTotal() {
+            let total = 0;
+            const values = document.querySelectorAll('.swipeable-row-content .cs-edit-value');
+            values.forEach(span => {
+                if (span.dataset.value) {
+                    total += parseInt(span.dataset.value, 10);
+                }
+            });
+            
+            document.getElementById('total-expenses').textContent = formatCurrencyBRL(total.toString());
+        }
+
+        // Load data from JSON
+        async function loadFixedExpenses() {
+            try {
+                const response = await fetch('gastos-fixos.json');
+                const data = await response.json();
+                console.log('Loaded data:', data);
+                
+                const container = document.getElementById('fixed-expenses-container');
+                const totalRow = container.querySelector('.row.mt-2');
+                
+                // Add each expense
+                data.gastos_fixos.forEach(expense => {
+                    const row = createSwipeableRow(expense);
+                    container.insertBefore(row, totalRow);
+                    initSwipe(row);
+                });
+                
+                updateTotal();
+            } catch (error) {
+                console.error('Error loading data:', error);
+            }
+        }
+
+        // Add a test row when button is clicked
+        document.getElementById('add-test-row').addEventListener('click', function() {
+            const container = document.getElementById('fixed-expenses-container');
+            const totalRow = container.querySelector('.row.mt-2');
+            
+            const testExpense = {
+                name: 'Teste ' + Math.floor(Math.random() * 1000),
+                value: Math.floor(Math.random() * 100000)
+            };
+            
+            const row = createSwipeableRow(testExpense);
+            container.insertBefore(row, totalRow);
+            initSwipe(row);
+            updateTotal();
+        });
+
+        // Load expenses when page loads
+        document.addEventListener('DOMContentLoaded', loadFixedExpenses);
+    </script>
+</body>
+</html>
