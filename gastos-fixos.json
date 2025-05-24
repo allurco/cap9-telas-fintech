@@ -1,0 +1,56 @@
+{
+  "gastos_fixos": [
+    {
+      "name": "Aluguel / Financiamento",
+      "value": 400000
+    },
+    {
+      "name": "Condomínio",
+      "value": 80000
+    },
+    {
+      "name": "Luz",
+      "value": 25000
+    },
+    {
+      "name": "Água",
+      "value": 12000
+    },
+    {
+      "name": "Internet",
+      "value": 18000
+    },
+    {
+      "name": "Celular",
+      "value": 9900
+    },
+    {
+      "name": "Plano de Saúde",
+      "value": 120000
+    },
+    {
+      "name": "Seguro de Vida",
+      "value": 15000
+    },
+    {
+      "name": "Seguro do Carro",
+      "value": 30000
+    },
+    {
+      "name": "Supermercado",
+      "value": 180000
+    },
+    {
+      "name": "Transporte",
+      "value": 40000
+    },
+    {
+      "name": "Streaming",
+      "value": 9000
+    },
+    {
+      "name": "Academia",
+      "value": 12000
+    }
+  ]
+}
