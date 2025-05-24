@@ -71,12 +71,9 @@
 
     <!-- Main Content -->
     <div class="main-content">
-        <header class="header mb-4">
-            <!-- Burger Menu for Mobile -->
-            <button class="burger-menu" onclick="openSidebar()">
-                <span></span>
-                <span></span>
-                <span></span>
+        <header class="dashboard-header d-flex align-items-center justify-content-between mb-4">
+            <button class="burger-menu d-md-none" aria-label="Abrir menu">
+                <i class="bi bi-list"></i>
             </button>
             <h1 class="en">Investments</h1>
             <h1 class="pt" style="display:none;">Investimentos</h1>
@@ -93,7 +90,9 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-8">
-                            <canvas id="portfolioChart" height="200"></canvas>
+                            <div class="chart-container" style="position: relative; height:200px;">
+                                <canvas id="portfolioChart"></canvas>
+                            </div>
                         </div>
                         <div class="col-md-4">
                             <div class="portfolio-stats p-3">

@@ -45,8 +45,11 @@ async function loadInvestmentsData() {
             'crypto': []
         };
         
-        renderPortfolioChart();
-        calculatePortfolioStats();
+        // Wait a bit to ensure Chart.js is fully loaded
+        setTimeout(() => {
+            calculatePortfolioStats();
+            renderPortfolioChart();
+        }, 100);
     } catch (error) {
         console.error('Error loading investments data:', error);
         // If data can't be loaded, use the default empty structure
@@ -66,13 +69,42 @@ async function saveInvestmentsData() {
 
 // === UI Rendering ===
 function renderPortfolioChart() {
-    const ctx = document.getElementById('portfolioChart').getContext('2d');
+    console.log('Rendering portfolio chart...');
+    const canvas = document.getElementById('portfolioChart');
+    if (!canvas) {
+        console.error('Portfolio chart canvas not found');
+        return;
+    }
+    
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {
+        console.error('Could not get 2D context from canvas');
+        return;
+    }
     
     // Calculate allocation data
     let totalFixed = calculateCategoryTotal('fixed-income');
     let totalVariable = calculateCategoryTotal('variable-income');
     let totalRealEstate = calculateCategoryTotal('real-estate');
     let totalCrypto = calculateCategoryTotal('crypto');
+    
+    console.log('Investment totals:', { totalFixed, totalVariable, totalRealEstate, totalCrypto });
+    
+    // Handle case where all values are 0
+    const hasData = totalFixed > 0 || totalVariable > 0 || totalRealEstate > 0 || totalCrypto > 0;
+    if (!hasData) {
+        console.log('No investment data to display');
+        // Show a message instead of an empty chart
+        const noDataMessage = document.createElement('div');
+        noDataMessage.textContent = 'Adicione investimentos para visualizar sua carteira';
+        noDataMessage.className = 'text-center text-muted my-5';
+        canvas.parentNode.insertBefore(noDataMessage, canvas);
+        canvas.style.display = 'none';
+        return;
+    }
+    
+    // Make sure canvas is visible
+    canvas.style.display = 'block';
     
     // Prepare chart data
     const data = {
@@ -96,37 +128,50 @@ function renderPortfolioChart() {
     };
     
     // If a chart already exists, destroy it
-    if (window.portfolioChart) {
-        window.portfolioChart.destroy();
+    try {
+        if (window.portfolioChart && typeof window.portfolioChart.destroy === 'function') {
+            console.log('Destroying existing chart');
+            window.portfolioChart.destroy();
+        }
+    } catch (error) {
+        console.error('Error destroying chart:', error);
+        // Continue anyway, we'll create a new chart
     }
     
-    // Create new chart
-    window.portfolioChart = new Chart(ctx, {
-        type: 'doughnut',
-        data: data,
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        color: document.body.classList.contains('light-mode') ? '#22285A' : '#FFFFFF'
-                    }
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            const label = context.label || '';
-                            const value = context.formattedValue;
-                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                            const percentage = Math.round((context.raw / total) * 100);
-                            return `${label}: ${value} (${percentage}%)`;
+    try {
+        // Create new chart
+        console.log('Creating new chart');
+        window.portfolioChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: data,
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: document.body.classList.contains('light-mode') ? '#22285A' : '#FFFFFF'
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = formatCurrencyBRL(context.raw);
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = Math.round((context.raw / total) * 100);
+                                return `${label}: ${value} (${percentage}%)`;
+                            }
                         }
                     }
                 }
             }
-        }
-    });
+        });
+        console.log('Chart created successfully');
+    } catch (error) {
+        console.error('Error creating chart:', error);
+    }
 }
 
 function calculateCategoryTotal(category) {
