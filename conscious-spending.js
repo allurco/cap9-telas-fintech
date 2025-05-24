@@ -133,6 +133,17 @@ function updatePercentageBadges(fixedTotal, investTotal, savingsTotal) {
     const savingsPercentage = Math.round((savingsTotal / netIncome) * 100);
     const guiltyFreePercentage = 100 - fixedPercentage - investPercentage - savingsPercentage;
     
+    console.log('Percentage breakdown:', {
+        fixedPercentage,
+        investPercentage,
+        savingsPercentage,
+        guiltyFreePercentage,
+        netIncome,
+        fixedTotal,
+        investTotal,
+        savingsTotal
+    });
+    
     // Update fixed expenses badge
     updateSectionBadge('Gastos Fixos', fixedPercentage, 50, 60); // Target: 50-60%
     
@@ -142,8 +153,38 @@ function updatePercentageBadges(fixedTotal, investTotal, savingsTotal) {
     // Update savings badge
     updateSectionBadge('Poupança/Objetivos', savingsPercentage, 5, 10); // Target: 5-10%
     
-    // Update guilty-free badge
-    updateSectionBadge('Gastos Livres', guiltyFreePercentage, 20, 35); // Target: 20-35%
+    // Update guilty-free badge - direct approach to ensure it works
+    const gastoLivresSection = findCardByHeaderText('Gastos Livres');
+    if (gastoLivresSection) {
+        const badge = gastoLivresSection.querySelector('.badge');
+        if (badge) {
+            // Update percentage text
+            badge.textContent = guiltyFreePercentage + '% ';
+            
+            // Determine if percentage is good or bad
+            let icon = document.createElement('i');
+            
+            if (guiltyFreePercentage < 20) {
+                // Below minimum target
+                icon.className = 'bi bi-arrow-down';
+                badge.className = 'badge bg-dark text-warning ms-2';
+            } else if (guiltyFreePercentage > 35) {
+                // Above maximum target
+                icon.className = 'bi bi-arrow-up';
+                badge.className = 'badge bg-dark text-danger ms-2';
+            } else {
+                // Within target range
+                icon.className = 'bi bi-check-lg';
+                badge.className = 'badge bg-dark text-success ms-2';
+            }
+            
+            // Clear existing icons and add the new one
+            while (badge.querySelector('i')) {
+                badge.querySelector('i').remove();
+            }
+            badge.appendChild(icon);
+        }
+    }
 }
 
 // Update badge for a specific section
