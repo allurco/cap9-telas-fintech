@@ -669,6 +669,155 @@ body.light-mode .non-editable-row .label {
     color: var(--blue-dark);
 }
 
+/* === Objetivos e Investimentos Styles === */
+.objetivos-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.goal-item {
+    border-radius: 8px;
+    border: 1px solid rgba(218, 190, 114, 0.3);
+    overflow: hidden;
+    background-color: var(--blue-light);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1.5rem;
+}
+
+body.light-mode .goal-item {
+    background-color: var(--light-card);
+    border-color: #e3e3e3;
+}
+
+.goal-header {
+    background-color: var(--blue-dark);
+    color: var(--gold);
+    border-bottom: 1px solid rgba(218, 190, 114, 0.3);
+}
+
+body.light-mode .goal-header {
+    background-color: var(--light-sidebar);
+    color: var(--blue-dark);
+}
+
+.goal-name i {
+    font-size: 0.85em;
+    cursor: pointer;
+}
+
+.contributions-header {
+    background-color: rgba(23, 27, 63, 0.6);
+    color: var(--gold);
+    cursor: pointer;
+}
+
+body.light-mode .contributions-header {
+    background-color: rgba(241, 243, 248, 0.8);
+    color: var(--blue-dark);
+}
+
+.contributions-list {
+    background-color: var(--blue-light);
+    color: white;
+}
+
+body.light-mode .contributions-list {
+    background-color: white;
+    color: var(--blue-dark);
+}
+
+.contribution-row {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.light-mode .contribution-row {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.even-row {
+    background-color: rgba(23, 27, 63, 0.3);
+}
+
+.odd-row {
+    background-color: rgba(23, 27, 63, 0.5);
+}
+
+body.light-mode .even-row {
+    background-color: rgba(241, 243, 248, 0.3);
+}
+
+body.light-mode .odd-row {
+    background-color: rgba(241, 243, 248, 0.6);
+}
+
+.add-contribution-btn {
+    color: var(--gold);
+    border-color: var(--gold);
+    background: transparent;
+}
+
+.add-contribution-btn:hover {
+    background-color: var(--gold);
+    color: var(--blue-dark);
+    border-color: var(--gold);
+}
+
+body.light-mode .add-contribution-btn {
+    color: var(--blue-dark);
+    border-color: var(--blue-dark);
+}
+
+body.light-mode .add-contribution-btn:hover {
+    background-color: var(--blue-dark);
+    color: white;
+    border-color: var(--blue-dark);
+}
+
+.add-goal-container {
+    margin: 2rem 0;
+}
+
+.add-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--blue-dark);
+    color: var(--gold);
+    border: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s ease;
+}
+
+.add-btn:hover {
+    transform: scale(1.1);
+    background-color: var(--gold);
+    color: var(--blue-dark);
+}
+
+body.light-mode .add-btn {
+    background-color: var(--blue-dark);
+    color: var(--gold);
+}
+
+body.light-mode .add-btn:hover {
+    background-color: var(--gold);
+    color: var(--blue-dark);
+}
+
+.btn-gold {
+    background-color: var(--gold);
+    color: var(--blue-dark);
+    border: none;
+}
+
+.btn-gold:hover {
+    background-color: var(--gold-dark);
+    color: white;
+}
+
 /* Remember me checkbox */
 .form-check-input {
     background-color: rgba(255, 255, 255, 0.1);
