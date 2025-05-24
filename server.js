@@ -31,6 +31,14 @@ app.get('/conscious-spending', (req, res) => {
     res.sendFile(path.join(__dirname, 'conscious-spending.html'));
 });
 
+app.get('/objetivos', (req, res) => {
+    res.sendFile(path.join(__dirname, 'objetivos.html'));
+});
+
+app.get('/investimentos', (req, res) => {
+    res.sendFile(path.join(__dirname, 'investimentos.html'));
+});
+
 // Handle 404
 app.use((req, res) => {
   res.status(404).sendFile(path.join(__dirname, '404.html'));
