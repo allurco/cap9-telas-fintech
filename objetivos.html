@@ -164,40 +164,67 @@
     <!-- Modal for Adding Contributions -->
     <div class="modal fade" id="contributionModal" tabindex="-1" aria-labelledby="contributionModalLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <div class="modal-content">
+            <div class="modal-content theme-aware-modal">
                 <div class="modal-header bg-blue text-gold">
                     <h5 class="modal-title" id="contributionModalLabel">Novo Aporte</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="contributionForm">
+                    <form id="contributionForm" class="needs-validation" novalidate>
                         <input type="hidden" id="contributionGoalId" value="">
-                        <div class="mb-3">
-                            <label for="contributionMonth" class="form-label">Mês</label>
-                            <select class="form-select" id="contributionMonth" required>
-                                <option value="1">Janeiro</option>
-                                <option value="2">Fevereiro</option>
-                                <option value="3">Março</option>
-                                <option value="4">Abril</option>
-                                <option value="5">Maio</option>
-                                <option value="6">Junho</option>
-                                <option value="7">Julho</option>
-                                <option value="8">Agosto</option>
-                                <option value="9">Setembro</option>
-                                <option value="10">Outubro</option>
-                                <option value="11">Novembro</option>
-                                <option value="12">Dezembro</option>
-                            </select>
+                        <div class="mb-4">
+                            <label for="contributionMonth" class="form-label fw-bold">Mês</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-blue text-gold"><i class="bi bi-calendar-month"></i></span>
+                                <select class="form-select" id="contributionMonth" required>
+                                    <option value="" selected disabled>Selecione o mês</option>
+                                    <option value="1">Janeiro</option>
+                                    <option value="2">Fevereiro</option>
+                                    <option value="3">Março</option>
+                                    <option value="4">Abril</option>
+                                    <option value="5">Maio</option>
+                                    <option value="6">Junho</option>
+                                    <option value="7">Julho</option>
+                                    <option value="8">Agosto</option>
+                                    <option value="9">Setembro</option>
+                                    <option value="10">Outubro</option>
+                                    <option value="11">Novembro</option>
+                                    <option value="12">Dezembro</option>
+                                </select>
+                                <div class="invalid-feedback">
+                                    Por favor, selecione o mês do aporte.
+                                </div>
+                            </div>
+                            <small class="text-muted">Em qual mês você fez essa contribuição?</small>
+                        </div>
+                        <div class="mb-4">
+                            <label for="contributionAmount" class="form-label fw-bold">Valor do Aporte (R$)</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-blue text-gold"><i class="bi bi-cash"></i></span>
+                                <input type="text" class="form-control currency-input" id="contributionAmount" placeholder="0,00" required>
+                                <div class="invalid-feedback">
+                                    Por favor, informe o valor do aporte.
+                                </div>
+                            </div>
+                            <small class="text-muted">Quanto você contribuiu para este objetivo?</small>
                         </div>
                         <div class="mb-3">
-                            <label for="contributionAmount" class="form-label">Valor (R$)</label>
-                            <input type="text" class="form-control currency-input" id="contributionAmount" required>
+                            <label for="contributionDate" class="form-label fw-bold">Data do Aporte</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-blue text-gold"><i class="bi bi-calendar-date"></i></span>
+                                <input type="date" class="form-control" id="contributionDate">
+                            </div>
+                            <small class="text-muted">Opcional: em qual data específica você fez o aporte?</small>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-gold" id="saveContributionBtn">Salvar</button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle me-1"></i> Cancelar
+                    </button>
+                    <button type="button" class="btn btn-gold" id="saveContributionBtn">
+                        <i class="bi bi-check-circle me-1"></i> Salvar Aporte
+                    </button>
                 </div>
             </div>
         </div>
