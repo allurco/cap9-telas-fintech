@@ -106,24 +106,31 @@ function renderPortfolioChart() {
     // Make sure canvas is visible
     canvas.style.display = 'block';
     
-    // Prepare chart data
+    // Prepare chart data with more vivid colors
     const data = {
         labels: ['Renda Fixa', 'Renda Variável', 'Fundos Imobiliários', 'Criptomoedas'],
         datasets: [{
             data: [totalFixed, totalVariable, totalRealEstate, totalCrypto],
             backgroundColor: [
-                'rgba(75, 192, 192, 0.7)',
-                'rgba(153, 102, 255, 0.7)',
-                'rgba(255, 159, 64, 0.7)',
-                'rgba(255, 99, 132, 0.7)'
+                'rgba(0, 184, 148, 0.85)',  // Teal - Fixed Income
+                'rgba(116, 85, 247, 0.85)', // Purple - Variable Income
+                'rgba(253, 150, 68, 0.85)', // Orange - Real Estate
+                'rgba(255, 71, 87, 0.85)'   // Pink - Crypto
             ],
             borderColor: [
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)',
-                'rgba(255, 99, 132, 1)'
+                'rgba(0, 184, 148, 1)',
+                'rgba(116, 85, 247, 1)',
+                'rgba(253, 150, 68, 1)',
+                'rgba(255, 71, 87, 1)'
             ],
-            borderWidth: 1
+            borderWidth: 2,
+            hoverBackgroundColor: [
+                'rgba(0, 184, 148, 1)',
+                'rgba(116, 85, 247, 1)',
+                'rgba(253, 150, 68, 1)',
+                'rgba(255, 71, 87, 1)'
+            ],
+            hoverBorderWidth: 3
         }]
     };
     
@@ -147,14 +154,36 @@ function renderPortfolioChart() {
             options: {
                 responsive: true,
                 maintainAspectRatio: true,
+                cutout: '60%',  // Makes the doughnut thicker and more pronounced
+                animation: {
+                    animateScale: true,
+                    animateRotate: true,
+                    duration: 1000
+                },
                 plugins: {
                     legend: {
                         position: 'bottom',
                         labels: {
+                            boxWidth: 15,
+                            padding: 15,
+                            font: {
+                                size: 14,
+                                weight: 'bold'
+                            },
                             color: document.body.classList.contains('light-mode') ? '#22285A' : '#FFFFFF'
                         }
                     },
                     tooltip: {
+                        backgroundColor: 'rgba(0,0,0,0.8)',
+                        titleFont: {
+                            size: 16,
+                            weight: 'bold'
+                        },
+                        bodyFont: {
+                            size: 14
+                        },
+                        padding: 12,
+                        cornerRadius: 8,
                         callbacks: {
                             label: function(context) {
                                 const label = context.label || '';
