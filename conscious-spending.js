@@ -100,26 +100,19 @@ function toggleEditDirectly(row) {
     valueInput.select();
 }
 
-// Update all calculated totals
-function updateCalculatedTotals() {
+// Update the overall totals and percentages
+function updateTotals() {
+    console.log('Updating totals and percentages...');
+    
     // Update Fixed Expenses total
-    const fixedTotal = updateSectionTotal('Gastos Fixos');
+    const fixedTotal = updateSectionTotal('Gastos Fixos') || 0;
     
     // Update Investments total
-    const investTotal = updateSectionTotal('Investimentos de Longo Prazo');
+    const investTotal = updateSectionTotal('Investimentos de Longo Prazo') || 0;
     
     // Update Savings total
-    const savingsTotal = updateSectionTotal('Poupança/Objetivos');
+    const savingsTotal = updateSectionTotal('Poupança/Objetivos') || 0;
     
-    // Update Guilt-free spending amount
-    updateGuiltyFreeSpending();
-    
-    // Update percentage badges
-    updatePercentageBadges(fixedTotal, investTotal, savingsTotal);
-}
-
-// Update percentage badges for each section based on net income
-function updatePercentageBadges(fixedTotal, investTotal, savingsTotal) {
     // Get net income
     const netIncomeEl = document.querySelector('[data-key="netIncome"]');
     if (!netIncomeEl) return;
@@ -127,11 +120,23 @@ function updatePercentageBadges(fixedTotal, investTotal, savingsTotal) {
     const netIncome = parseCurrencyBRL(netIncomeEl.textContent);
     if (netIncome <= 0) return; // Avoid division by zero
     
-    // Calculate percentages
+    // Calculate guilt-free spending
+    const guiltyFree = netIncome - fixedTotal - investTotal - savingsTotal;
+    
+    // Update the Gastos Livres display
+    updateGuiltyFreeAmount(guiltyFree);
+    
+    // Update percentage badges
+    updatePercentageBadges(fixedTotal, investTotal, savingsTotal, guiltyFree, netIncome);
+}
+
+// Update percentage badges for each section based on net income
+function updatePercentageBadges(fixedTotal, investTotal, savingsTotal, guiltyFree, netIncome) {
+    // Calculate percentages - using Math.max to ensure we don't get negative values
     const fixedPercentage = Math.round((fixedTotal / netIncome) * 100);
     const investPercentage = Math.round((investTotal / netIncome) * 100);
     const savingsPercentage = Math.round((savingsTotal / netIncome) * 100);
-    const guiltyFreePercentage = 100 - fixedPercentage - investPercentage - savingsPercentage;
+    const guiltyFreePercentage = Math.max(0, Math.round((guiltyFree / netIncome) * 100));
     
     console.log('Percentage breakdown:', {
         fixedPercentage,
@@ -141,7 +146,8 @@ function updatePercentageBadges(fixedTotal, investTotal, savingsTotal) {
         netIncome,
         fixedTotal,
         investTotal,
-        savingsTotal
+        savingsTotal,
+        guiltyFree
     });
     
     // Update fixed expenses badge
@@ -298,41 +304,8 @@ function updateSectionTotal(sectionTitle) {
     return total;
 }
 
-// Update the guilt-free spending amount
-function updateGuiltyFreeSpending() {
-    // Get the net income
-    const netIncomeEl = document.querySelector('[data-key="netIncome"]');
-    if (!netIncomeEl) return;
-    
-    const netIncome = parseCurrencyBRL(netIncomeEl.textContent);
-    
-    // Get section totals
-    const fixedExpensesSection = findCardByHeaderText('Gastos Fixos');
-    const investmentsSection = findCardByHeaderText('Investimentos de Longo Prazo');
-    const savingsSection = findCardByHeaderText('Poupança/Objetivos');
-    
-    let fixedTotal = 0;
-    let investTotal = 0;
-    let savingsTotal = 0;
-    
-    if (fixedExpensesSection) {
-        const totalEl = fixedExpensesSection.querySelector('.row.mt-2 .cs-edit-value');
-        if (totalEl) fixedTotal = parseCurrencyBRL(totalEl.textContent);
-    }
-    
-    if (investmentsSection) {
-        const totalEl = investmentsSection.querySelector('.row.mt-2 .cs-edit-value');
-        if (totalEl) investTotal = parseCurrencyBRL(totalEl.textContent);
-    }
-    
-    if (savingsSection) {
-        const totalEl = savingsSection.querySelector('.row.mt-2 .cs-edit-value');
-        if (totalEl) savingsTotal = parseCurrencyBRL(totalEl.textContent);
-    }
-    
-    // Calculate guilt-free spending
-    const guiltyFree = netIncome - fixedTotal - investTotal - savingsTotal;
-    
+// Update the guilt-free spending amount display
+function updateGuiltyFreeAmount(guiltyFree) {
     // Update the display
     const guiltyFreeSection = findCardByHeaderText('Gastos Livres');
     if (guiltyFreeSection) {
@@ -341,6 +314,34 @@ function updateGuiltyFreeSpending() {
             valueEl.textContent = formatCurrencyBRL(guiltyFree);
         }
     }
+}
+
+// Function to add a new row to a section
+function addNewRow(sectionTitle, labelCol, valueCol) {
+    const section = findCardByHeaderText(sectionTitle);
+    if (!section) return;
+    
+    const cardBody = section.querySelector('.card-body');
+    if (!cardBody) return;
+    
+    // Default label and value based on section
+    let defaultLabel = 'Nova Despesa';
+    let defaultValue = 'R$ 0,00';
+    
+    if (sectionTitle === 'Investimentos de Longo Prazo') {
+        defaultLabel = 'Novo Investimento';
+    } else if (sectionTitle === 'Poupança/Objetivos') {
+        defaultLabel = 'Novo Objetivo';
+    }
+    
+    // Add the new row
+    const newRow = addSwipeableRow(cardBody, defaultLabel, defaultValue, labelCol, valueCol);
+    
+    // Initialize swipe on the new row
+    initSwipe(newRow);
+    
+    // Update totals
+    updateTotals();
 }
 
 // Function to delete an existing row
@@ -523,7 +524,7 @@ function addSwipeableRow(cardBody, rowTitle, initialValue, colLabel, colValue) {
     initSwipe(container);
     
     // Update totals after adding
-    updateCalculatedTotals();
+    updateTotals();
     
     return container;
 }
@@ -551,13 +552,13 @@ async function loadFinancialData() {
         await loadSectionData('gastos-fixos.json', 'gastos_fixos', 'Gastos Fixos', 'col-8', 'col-4');
         
         // Load investments (investimentos)
-        await loadSectionData('investimentos.json', 'investimentos', 'Investimentos', 'col-8', 'col-4');
+        await loadSectionData('investimentos.json', 'investimentos', 'Investimentos de Longo Prazo', 'col-8', 'col-4');
         
         // Load savings (poupança)
         await loadSectionData('poupanca.json', 'poupanca', 'Poupança/Objetivos', 'col-8', 'col-4');
         
         // Update all calculations
-        updateCalculatedTotals();
+        updateTotals();
         
     } catch (error) {
         console.error('Error loading financial data:', error);
@@ -665,34 +666,32 @@ document.addEventListener('DOMContentLoaded', function() {
         initSwipe(row);
     });
     
-    // Load data
+    // Load financial data
     loadFinancialData();
     
-    // Set up add buttons
-    // Gastos Fixos
-    var addFixedBtn = document.getElementById('add-fixed-btn');
+    // Add event listener for net income changes
+    const netIncomeEl = document.querySelector('[data-key="netIncome"]');
+    if (netIncomeEl) {
+        netIncomeEl.addEventListener('change', updateTotals);
+    }
+    
+    // Add event listeners for the add row buttons
+    const addFixedBtn = document.getElementById('add-fixed-btn');
+    const addInvestBtn = document.getElementById('add-invest-btn');
+    const addSavingsBtn = document.getElementById('add-savings-btn');
+    
     if (addFixedBtn) {
-        addFixedBtn.addEventListener('click', function() {
-            var cardBody = addFixedBtn.closest('.card').querySelector('.card-body');
-            addSwipeableRow(cardBody, 'Nova Despesa', 'R$ 0,00', 'col-8', 'col-4');
-        });
+        addFixedBtn.addEventListener('click', () => addNewRow('Gastos Fixos', 'col-8', 'col-4'));
     }
     
-    // Investimentos
-    var addInvestBtn = document.getElementById('add-invest-btn');
     if (addInvestBtn) {
-        addInvestBtn.addEventListener('click', function() {
-            var cardBody = addInvestBtn.closest('.card').querySelector('.card-body');
-            addSwipeableRow(cardBody, 'Novo Investimento', 'R$ 0,00', 'col-8', 'col-4');
-        });
+        addInvestBtn.addEventListener('click', () => addNewRow('Investimentos de Longo Prazo', 'col-8', 'col-4'));
     }
     
-    // Poupança/Objetivos
-    var addSavingsBtn = document.getElementById('add-savings-btn');
     if (addSavingsBtn) {
-        addSavingsBtn.addEventListener('click', function() {
-            var cardBody = addSavingsBtn.closest('.card').querySelector('.card-body');
-            addSwipeableRow(cardBody, 'Novo Objetivo', 'R$ 0,00', 'col-7', 'col-3');
-        });
+        addSavingsBtn.addEventListener('click', () => addNewRow('Poupança/Objetivos', 'col-8', 'col-4'));
     }
+    
+    // Call updateTotals to ensure everything is initialized correctly
+    setTimeout(updateTotals, 500);
 });
