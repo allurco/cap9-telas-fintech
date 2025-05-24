@@ -1,0 +1,61 @@
+{
+  "investments": {
+    "fixed-income": [
+      {
+        "id": "fixed1",
+        "name": "Tesouro Direto IPCA+",
+        "description": "Vencimento: 2035",
+        "amount": 10000,
+        "return": 4.2
+      },
+      {
+        "id": "fixed2",
+        "name": "CDB Banco XYZ",
+        "description": "120% do CDI",
+        "amount": 5000,
+        "return": 2.8
+      }
+    ],
+    "variable-income": [
+      {
+        "id": "var1",
+        "name": "ETF BOVA11",
+        "description": "Índice Bovespa",
+        "amount": 5000,
+        "return": 10.5
+      },
+      {
+        "id": "var2",
+        "name": "PETR4",
+        "description": "Petrobras PN",
+        "amount": 3000,
+        "return": -2.1
+      },
+      {
+        "id": "var3",
+        "name": "VALE3",
+        "description": "Vale ON",
+        "amount": 2000,
+        "return": 15.3
+      }
+    ],
+    "real-estate": [
+      {
+        "id": "real1",
+        "name": "HGLG11",
+        "description": "CSHG Logística",
+        "amount": 0,
+        "return": 0
+      }
+    ],
+    "crypto": [
+      {
+        "id": "crypto1",
+        "name": "Bitcoin (BTC)",
+        "description": "0.005 BTC",
+        "amount": 0,
+        "return": 0
+      }
+    ]
+  }
+}
