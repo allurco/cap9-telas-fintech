@@ -112,23 +112,23 @@ function renderPortfolioChart() {
         datasets: [{
             data: [totalFixed, totalVariable, totalRealEstate, totalCrypto],
             backgroundColor: [
-                'rgba(0, 184, 148, 0.85)',  // Teal - Fixed Income
-                'rgba(116, 85, 247, 0.85)', // Purple - Variable Income
-                'rgba(253, 150, 68, 0.85)', // Orange - Real Estate
-                'rgba(255, 71, 87, 0.85)'   // Pink - Crypto
+                'rgba(218, 190, 114, 0.85)',  // Gold - Fixed Income
+                'rgba(191, 164, 90, 0.85)',    // Gold variant - Variable Income
+                'rgba(162, 138, 69, 0.85)',    // Gold variant dark - Real Estate
+                'rgba(34, 40, 90, 0.85)'       // Blue - Crypto
             ],
             borderColor: [
-                'rgba(0, 184, 148, 1)',
-                'rgba(116, 85, 247, 1)',
-                'rgba(253, 150, 68, 1)',
-                'rgba(255, 71, 87, 1)'
+                'rgba(218, 190, 114, 1)',
+                'rgba(191, 164, 90, 1)',
+                'rgba(162, 138, 69, 1)',
+                'rgba(34, 40, 90, 1)'
             ],
             borderWidth: 2,
             hoverBackgroundColor: [
-                'rgba(0, 184, 148, 1)',
-                'rgba(116, 85, 247, 1)',
-                'rgba(253, 150, 68, 1)',
-                'rgba(255, 71, 87, 1)'
+                'rgba(218, 190, 114, 1)',
+                'rgba(191, 164, 90, 1)',
+                'rgba(162, 138, 69, 1)',
+                'rgba(34, 40, 90, 1)'
             ],
             hoverBorderWidth: 3
         }]

@@ -88,27 +88,29 @@
                     <span class="badge bg-success">+7.3% <i class="bi bi-arrow-up"></i></span>
                 </div>
                 <div class="card-body">
-                    <div class="chart-container mb-4" style="position: relative; height: 300px; max-width: 90%; margin: 0 auto;">
-                        <canvas id="portfolioChart"></canvas>
-                    </div>
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-8">
+                            <div class="chart-container" style="position: relative; height: 300px; margin: 0 auto;">
+                                <canvas id="portfolioChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
                             <div class="portfolio-stats d-flex flex-wrap justify-content-between p-3 text-center">
-                                <div class="stats-item mb-3 p-3 mx-auto" style="min-width: 180px; border-radius: 10px; background-color: rgba(0, 184, 148, 0.1);">
+                                <div class="stats-item mb-3 p-3 mx-auto" style="min-width: 180px; border-radius: 10px; background-color: rgba(218, 190, 114, 0.15);">
                                     <div class="stats-label mb-2"><i class="bi bi-piggy-bank-fill"></i> Total Investido</div>
-                                    <div class="stats-value fw-bold" id="totalInvested" style="font-size: 1.5rem;">R$ 25.000,00</div>
+                                    <div class="stats-value fw-bold" id="totalInvested" style="font-size: 1.5rem; color: var(--gold-dark);">R$ 25.000,00</div>
                                 </div>
-                                <div class="stats-item mb-3 p-3 mx-auto" style="min-width: 180px; border-radius: 10px; background-color: rgba(116, 85, 247, 0.1);">
+                                <div class="stats-item mb-3 p-3 mx-auto" style="min-width: 180px; border-radius: 10px; background-color: rgba(191, 164, 90, 0.15);">
                                     <div class="stats-label mb-2"><i class="bi bi-cash-stack"></i> Valor Atual</div>
-                                    <div class="stats-value fw-bold" id="currentValue" style="font-size: 1.5rem;">R$ 26.825,00</div>
+                                    <div class="stats-value fw-bold" id="currentValue" style="font-size: 1.5rem; color: var(--gold-dark);">R$ 26.825,00</div>
                                 </div>
-                                <div class="stats-item mb-3 p-3 mx-auto" style="min-width: 180px; border-radius: 10px; background-color: rgba(253, 150, 68, 0.1);">
+                                <div class="stats-item mb-3 p-3 mx-auto" style="min-width: 180px; border-radius: 10px; background-color: rgba(162, 138, 69, 0.15);">
                                     <div class="stats-label mb-2"><i class="bi bi-graph-up-arrow"></i> Rentabilidade</div>
                                     <div class="stats-value text-success fw-bold" id="profitability" style="font-size: 1.5rem;">+7.3%</div>
                                 </div>
-                                <div class="stats-item p-3 mx-auto" style="min-width: 180px; border-radius: 10px; background-color: rgba(255, 71, 87, 0.1);">
-                                    <div class="stats-label">Ganho/Perda</div>
-                                    <div class="stats-value text-success fw-bold" id="gainLoss">+R$ 1.825,00</div>
+                                <div class="stats-item p-3 mx-auto" style="min-width: 180px; border-radius: 10px; background-color: rgba(34, 40, 90, 0.15);">
+                                    <div class="stats-label mb-2"><i class="bi bi-calculator"></i> Ganho/Perda</div>
+                                    <div class="stats-value text-success fw-bold" id="gainLoss" style="font-size: 1.5rem;">+R$ 1.825,00</div>
                                 </div>
                             </div>
                         </div>
