@@ -460,67 +460,79 @@ async function loadFinancialData() {
         }
         
         // Load fixed expenses (gastos fixos)
-        try {
-            console.log('Attempting to load gastos-fixos.json...');
-            const fixedExpensesResponse = await fetch('gastos-fixos.json');
-            const fixedExpensesData = await fixedExpensesResponse.json();
-            console.log('Successfully loaded fixed expenses:', fixedExpensesData);
-            
-            // Get the fixed expenses section and find its card body
-            console.log('Looking for Gastos Fixos section...');
-            const fixedExpensesSection = findCardByHeaderText('Gastos Fixos');
-            console.log('Fixed expenses section found:', !!fixedExpensesSection);
-            if (fixedExpensesSection) {
-                const cardBody = fixedExpensesSection.querySelector('.card-body');
-                console.log('Card body found:', !!cardBody);
-                
-                console.log('Starting fresh with fixed expenses data');
-                
-                // Find total row (we want to keep this)
-                const totalRow = cardBody.querySelector('.row.mt-2');
-                console.log('Total row found:', !!totalRow);
-                
-                // Clear existing rows
-                const existingRows = cardBody.querySelectorAll('.swipeable-row-container');
-                console.log('Found', existingRows.length, 'existing swipeable rows');
-                existingRows.forEach(row => row.remove());
-                
-                // Initialize total expenses counter
-                let totalFixedExpenses = 0;
-                
-                // Create and add rows for all expenses
-                console.log('Creating rows for', fixedExpensesData.gastos_fixos.length, 'expenses');
-                
-                // Add each expense row to the card body
-                fixedExpensesData.gastos_fixos.forEach(expense => {
-                    console.log('Processing expense:', expense.name, expense.value);
-                    
-                    // Convert value to a proper number format (values in JSON are in cents)
-                    const valueInReais = expense.value / 100;
-                    console.log('Value in Reais:', valueInReais);
-                    
-                    // Add to cardBody
-                    const newRow = addSwipeableRow(
-                        cardBody, 
-                        expense.name, 
-                        formatCurrencyBRL(valueInReais), 
-                        'col-8', 
-                        'col-4'
-                    );
-                    
-                    // Initialize swipe on the new row
-                    initSwipe(newRow);
-                });
-                
-                // Update all calculations
-                updateCalculatedTotals();
-            }
-        } catch (error) {
-            console.error('Error loading fixed expenses:', error);
-        }
+        await loadSectionData('gastos-fixos.json', 'gastos_fixos', 'Gastos Fixos', 'col-8', 'col-4');
+        
+        // Load investments (investimentos)
+        await loadSectionData('investimentos.json', 'investimentos', 'Investimentos', 'col-8', 'col-4');
+        
+        // Load savings (poupança)
+        await loadSectionData('poupanca.json', 'poupanca', 'Poupança/Objetivos', 'col-8', 'col-4');
+        
+        // Update all calculations
+        updateCalculatedTotals();
         
     } catch (error) {
         console.error('Error loading financial data:', error);
+    }
+}
+
+// Helper function to load data for a specific section
+async function loadSectionData(jsonFile, dataKey, sectionTitle, labelCol, valueCol) {
+    try {
+        console.log(`Attempting to load ${jsonFile}...`);
+        const response = await fetch(jsonFile);
+        const data = await response.json();
+        console.log(`Successfully loaded ${sectionTitle} data:`, data);
+        
+        // Get the section and find its card body
+        console.log(`Looking for ${sectionTitle} section...`);
+        const section = findCardByHeaderText(sectionTitle);
+        console.log(`${sectionTitle} section found:`, !!section);
+        
+        if (section) {
+            const cardBody = section.querySelector('.card-body');
+            console.log('Card body found:', !!cardBody);
+            
+            console.log(`Starting fresh with ${sectionTitle} data`);
+            
+            // Find total row (we want to keep this)
+            const totalRow = cardBody.querySelector('.row.mt-2');
+            console.log('Total row found:', !!totalRow);
+            
+            // Clear existing rows
+            const existingRows = cardBody.querySelectorAll('.swipeable-row-container');
+            console.log('Found', existingRows.length, 'existing swipeable rows');
+            existingRows.forEach(row => row.remove());
+            
+            // Initialize total counter
+            let total = 0;
+            
+            // Create and add rows for all items
+            console.log('Creating rows for', data[dataKey].length, 'items');
+            
+            // Add each row to the card body
+            data[dataKey].forEach(item => {
+                console.log('Processing item:', item.name, item.value);
+                
+                // Convert value to a proper number format (values in JSON are in cents)
+                const valueInReais = item.value / 100;
+                console.log('Value in Reais:', valueInReais);
+                
+                // Add to cardBody
+                const newRow = addSwipeableRow(
+                    cardBody, 
+                    item.name, 
+                    formatCurrencyBRL(valueInReais), 
+                    labelCol, 
+                    valueCol
+                );
+                
+                // Initialize swipe on the new row
+                initSwipe(newRow);
+            });
+        }
+    } catch (error) {
+        console.error(`Error loading ${sectionTitle}:`, error);
     }
 }
 

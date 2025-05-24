@@ -1,0 +1,20 @@
+{
+  "investimentos": [
+    {
+      "name": "Fundos de Investimento",
+      "value": 100000
+    },
+    {
+      "name": "Ações",
+      "value": 50000
+    },
+    {
+      "name": "Renda Fixa",
+      "value": 80000
+    },
+    {
+      "name": "Tesouro Direto",
+      "value": 70000
+    }
+  ]
+}

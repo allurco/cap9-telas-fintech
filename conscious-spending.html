@@ -176,13 +176,33 @@
                         <span class="badge bg-dark text-success ms-2">9% <i class="bi bi-arrow-down"></i></span>
                     </div>
                     <div class="card-body p-2">
-                        <div class="row g-1 align-items-center">
-                            <div class="col-8">Fundos de Investimento</div>
-                            <div class="col-4 text-end d-flex align-items-center justify-content-end gap-2"><span class="cs-edit-value" data-key="investmentFunds">R$ 1.000,00</span><input type="text" class="edit-input d-none form-control form-control-sm text-end" value="R$ 1.000,00"><button class="btn btn-link p-0 m-0 cs-info" title="Editar" onclick="toggleEdit(this)"><i class="bi bi-pencil-fill"></i></button><button class="btn btn-link p-0 m-0 cs-edit-btn d-none" title="Salvar" onclick="saveEdit(this)"><i class="bi bi-check-lg"></i></button></div>
+                        <div class="swipeable-row-container">
+                            <div class="swipeable-row-actions">
+                                <div class="swipe-action swipe-action-edit" data-action="edit">
+                                    <i class="bi bi-pencil-fill"></i>
+                                </div>
+                                <div class="swipe-action swipe-action-delete" data-action="delete">
+                                    <i class="bi bi-trash"></i>
+                                </div>
+                            </div>
+                            <div class="swipeable-row-content">
+                                <div class="row g-1 align-items-center">
+                                    <div class="col-8 label">Fundos de Investimento</div>
+                                    <div class="col-4 value text-end d-flex align-items-center justify-content-end gap-2">
+                                        <span class="cs-edit-value">R$ 1.000,00</span>
+                                        <input type="text" class="edit-input d-none form-control form-control-sm text-end" value="R$ 1.000,00">
+                                        <button class="btn btn-link p-0 m-0 cs-edit-btn d-none" title="Salvar" onclick="saveEdit(this)"><i class="bi bi-check-lg"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-8 fw-bold text-gold">Total Investimentos</div>
+                            <div class="col-4 text-end fw-bold text-gold d-flex align-items-center justify-content-end gap-2"><span class="cs-edit-value">R$ 1.000,00</span></div>
                         </div>
                     </div>
                     <div class="text-center mt-2 mb-3">
-                        <button id="add-investment-btn" class="btn btn-sm btn-outline-success add-row-btn" type="button"><i class="bi bi-plus-circle"></i> Adicionar linha</button>
+                        <button id="add-invest-btn" class="btn btn-sm btn-outline-success add-row-btn" type="button"><i class="bi bi-plus-circle"></i> Adicionar linha</button>
                     </div>
                 </div>
                 <!-- Poupança/Objetivos -->
@@ -193,20 +213,33 @@
                         <span class="badge bg-dark text-danger ms-2">15% <i class="bi bi-arrow-up"></i></span>
                     </div>
                     <div class="card-body p-2">
-                        <div class="row g-1 align-items-center">
-                            <div class="col-7">Fundo de emergência</div>
-                            <div class="col-3 text-end">
-                                <span class="cs-edit-value" data-key="emergencyFund">R$ 1.600,00</span>
-                                <input type="text" class="edit-input d-none form-control form-control-sm text-end" value="R$ 1.600,00">
+                        <div class="swipeable-row-container">
+                            <div class="swipeable-row-actions">
+                                <div class="swipe-action swipe-action-edit" data-action="edit">
+                                    <i class="bi bi-pencil-fill"></i>
+                                </div>
+                                <div class="swipe-action swipe-action-delete" data-action="delete">
+                                    <i class="bi bi-trash"></i>
+                                </div>
                             </div>
-                            <div class="col-2 text-end">
-                                <button class="btn btn-link p-0 m-0 cs-info" title="Editar fundo de emergência" onclick="toggleEdit(this)"><i class="bi bi-pencil-fill"></i></button>
-                                <button class="btn btn-link p-0 m-0 cs-edit-btn d-none" title="Salvar" onclick="saveEdit(this)"><i class="bi bi-check-lg"></i></button>
+                            <div class="swipeable-row-content">
+                                <div class="row g-1 align-items-center">
+                                    <div class="col-8 label">Fundo de emergência</div>
+                                    <div class="col-4 value text-end d-flex align-items-center justify-content-end gap-2">
+                                        <span class="cs-edit-value">R$ 1.600,00</span>
+                                        <input type="text" class="edit-input d-none form-control form-control-sm text-end" value="R$ 1.600,00">
+                                        <button class="btn btn-link p-0 m-0 cs-edit-btn d-none" title="Salvar" onclick="saveEdit(this)"><i class="bi bi-check-lg"></i></button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="text-center mt-2 mb-3">
-                            <button id="add-savings-btn" class="btn btn-sm btn-outline-success add-row-btn" type="button"><i class="bi bi-plus-circle"></i> Adicionar linha</button>
+                        <div class="row mt-2">
+                            <div class="col-8 fw-bold text-gold">Total Poupança/Objetivos</div>
+                            <div class="col-4 text-end fw-bold text-gold d-flex align-items-center justify-content-end gap-2"><span class="cs-edit-value">R$ 1.600,00</span></div>
                         </div>
+                    </div>
+                    <div class="text-center mt-2 mb-3">
+                        <button id="add-savings-btn" class="btn btn-sm btn-outline-success add-row-btn" type="button"><i class="bi bi-plus-circle"></i> Adicionar linha</button>
                     </div>
                 </div>
                 <!-- Gastos Livres -->
