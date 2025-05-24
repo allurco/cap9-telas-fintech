@@ -448,6 +448,20 @@ body.dashboard.light-mode .spending-table th {
 body.dashboard.light-mode .dashboard-header {
     color: var(--light-text);
 }
+
+/* Fix input text color in light mode */
+body.dashboard.light-mode .form-control {
+    color: var(--blue-dark);
+    background-color: white;
+    border-color: #ced4da;
+}
+
+body.dashboard.light-mode .form-control:focus {
+    color: var(--blue-dark);
+    background-color: white;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 0.25rem rgba(218, 190, 114, 0.25);
+}
 body.dashboard.light-mode .form-check-input:checked {
     background-color: var(--gold-dark);
     border-color: var(--gold-dark);
@@ -631,6 +645,30 @@ body.no-scroll {
     opacity: 0.8;
 }
 
+/* Non-editable row styles */
+.non-editable-row {
+    padding: 0.5rem 0.25rem;
+    background-color: var(--blue-light);
+    border-left: 3px solid var(--gold);
+    margin-bottom: 0.5rem;
+    opacity: 0.9;
+    border-radius: 4px;
+}
+
+.non-editable-row .label {
+    color: var(--gold);
+    font-style: italic;
+}
+
+body.light-mode .non-editable-row {
+    background-color: var(--light-sidebar);
+    border-left: 3px solid var(--gold-dark);
+}
+
+body.light-mode .non-editable-row .label {
+    color: var(--blue-dark);
+}
+
 /* Remember me checkbox */
 .form-check-input {
     background-color: rgba(255, 255, 255, 0.1);
@@ -663,6 +701,90 @@ body.no-scroll {
     align-items: center;
     gap: 0.45rem;
     text-transform: none;
+}
+
+/* iOS-style Swipeable Rows - Improved Implementation */
+.swipeable-row-container {
+    position: relative;
+    overflow: hidden;
+    touch-action: pan-y;
+    margin-bottom: 0.25rem;
+    border-radius: 0;
+    z-index: 1;
+    height: 48px;
+}
+
+.swipeable-row-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--light-card);
+    transform: translateX(0);
+    transition: transform 0.3s ease;
+    z-index: 2;
+    border-radius: 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    display: flex;
+    align-items: stretch;
+}
+
+.swipeable-row-content .row {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.swipeable-row-container {
+    margin-bottom: 0.25rem;
+}
+
+.card-body {
+    padding: 0.75rem !important;
+}
+
+body.dark-mode .swipeable-row-content {
+    background-color: var(--blue-dark);
+}
+
+body.dashboard:not(.light-mode) .swipeable-row-content {
+    background-color: var(--blue-light);
+}
+
+.swipeable-row-actions {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    display: flex;
+    align-items: stretch;
+    border-radius: 0;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.swipe-action {
+    height: 45px;
+    width: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 500;
+    user-select: none;
+    font-size: 1.25rem;
+}
+
+.swipe-action-edit {
+    background-color: #2196F3;
+}
+
+.swipe-action-delete {
+    background-color: #F44336;
 }
 .add-row-btn .bi-plus-circle {
     color: #fff !important;

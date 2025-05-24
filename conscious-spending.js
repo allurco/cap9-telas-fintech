@@ -187,6 +187,7 @@ function updateSectionTotal(sectionTitle) {
     const section = findCardByHeaderText(sectionTitle);
     if (!section) return;
     
+    // First, calculate total from swipeable rows
     const rows = section.querySelectorAll('.swipeable-row-container');
     let total = 0;
     
@@ -197,6 +198,52 @@ function updateSectionTotal(sectionTitle) {
             total += value;
         }
     });
+    
+    // For fixed expenses, handle the miscellaneous row specially
+    if (sectionTitle === 'Gastos Fixos') {
+        // Remove existing miscellaneous row
+        const existingMiscRow = section.querySelector('.non-editable-row');
+        if (existingMiscRow) {
+            existingMiscRow.remove();
+        }
+        
+        // Calculate 5% of total spending
+        const miscValue = total * 0.05;
+        
+        // Create the non-editable miscellaneous row
+        const miscRow = document.createElement('div');
+        miscRow.className = 'non-editable-row';
+        miscRow.innerHTML = `
+            <div class="row g-1 align-items-center">
+                <div class="col-8 label fw-bold">Miscelâneos (5%)</div>
+                <div class="col-4 value text-end d-flex align-items-center justify-content-end gap-2">
+                    <span class="cs-edit-value">${formatCurrencyBRL(miscValue)}</span>
+                </div>
+            </div>
+        `;
+        
+        // Find the card body and total row
+        const cardBody = section.querySelector('.card-body');
+        const totalRow = cardBody.querySelector('.row.mt-2');
+        
+        // Add the row before the total row
+        if (totalRow && cardBody) {
+            cardBody.insertBefore(miscRow, totalRow);
+        }
+        
+        // Add the miscellaneous value to the total
+        total += miscValue;
+    } else {
+        // For other sections, include any non-editable rows in the calculation
+        const nonEditableRows = section.querySelectorAll('.non-editable-row');
+        nonEditableRows.forEach(row => {
+            const valueEl = row.querySelector('.cs-edit-value');
+            if (valueEl) {
+                const value = parseCurrencyBRL(valueEl.textContent);
+                total += value;
+            }
+        });
+    }
     
     // Update the total display
     const totalRow = section.querySelector('.row.mt-2');
@@ -500,8 +547,8 @@ async function loadSectionData(jsonFile, dataKey, sectionTitle, labelCol, valueC
             console.log('Total row found:', !!totalRow);
             
             // Clear existing rows
-            const existingRows = cardBody.querySelectorAll('.swipeable-row-container');
-            console.log('Found', existingRows.length, 'existing swipeable rows');
+            const existingRows = cardBody.querySelectorAll('.swipeable-row-container, .non-editable-row');
+            console.log('Found', existingRows.length, 'existing rows');
             existingRows.forEach(row => row.remove());
             
             // Initialize total counter
@@ -518,6 +565,9 @@ async function loadSectionData(jsonFile, dataKey, sectionTitle, labelCol, valueC
                 const valueInReais = item.value / 100;
                 console.log('Value in Reais:', valueInReais);
                 
+                // Keep track of the total
+                total += valueInReais;
+                
                 // Add to cardBody
                 const newRow = addSwipeableRow(
                     cardBody, 
@@ -530,6 +580,34 @@ async function loadSectionData(jsonFile, dataKey, sectionTitle, labelCol, valueC
                 // Initialize swipe on the new row
                 initSwipe(newRow);
             });
+            
+            // For fixed expenses section only, add a non-editable miscellaneous row (5% of total)
+            if (sectionTitle === 'Gastos Fixos') {
+                // Calculate 5% of total spending
+                const miscValue = total * 0.05;
+                
+                // Create the non-editable miscellaneous row
+                const miscRow = document.createElement('div');
+                miscRow.className = 'non-editable-row';
+                miscRow.innerHTML = `
+                    <div class="row g-1 align-items-center">
+                        <div class="${labelCol} label fw-bold">Miscelâneos (5%)</div>
+                        <div class="${valueCol} value text-end d-flex align-items-center justify-content-end gap-2">
+                            <span class="cs-edit-value">${formatCurrencyBRL(miscValue)}</span>
+                        </div>
+                    </div>
+                `;
+                
+                // Add the row before the total row
+                if (totalRow) {
+                    cardBody.insertBefore(miscRow, totalRow);
+                } else {
+                    cardBody.appendChild(miscRow);
+                }
+                
+                // Add the miscellaneous value to the total
+                total += miscValue;
+            }
         }
     } catch (error) {
         console.error(`Error loading ${sectionTitle}:`, error);
