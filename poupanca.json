@@ -1,0 +1,20 @@
+{
+  "poupanca": [
+    {
+      "name": "Fundo de emergência",
+      "value": 160000
+    },
+    {
+      "name": "Viagem de férias",
+      "value": 50000
+    },
+    {
+      "name": "Novo laptop",
+      "value": 30000
+    },
+    {
+      "name": "Curso de especialização",
+      "value": 40000
+    }
+  ]
+}

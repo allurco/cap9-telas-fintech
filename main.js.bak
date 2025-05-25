@@ -1,0 +1,808 @@
+// main.js - Vida Rica Fintech App JavaScript
+// ------------------------------------------
+// This file centralizes all interactive logic for dashboard and conscious spending pages.
+// It handles language switching, theme toggling, sidebar (burger menu) logic, and inline editing.
+// ------------------------------------------
+
+// === Language Detection & Switching ===
+function setLanguage(lang) {
+    var enEls = document.querySelectorAll('.en');
+    var ptEls = document.querySelectorAll('.pt');
+    if (lang === 'pt') {
+        enEls.forEach(el => el.style.display = 'none');
+        ptEls.forEach(el => el.style.display = '');
+    } else {
+        enEls.forEach(el => el.style.display = '');
+        ptEls.forEach(el => el.style.display = 'none');
+    }
+    localStorage.setItem('lang', lang);
+}
+
+// === Theme Toggling ===
+function setTheme(theme) {
+    var icon = document.getElementById('themeIcon');
+    if (theme === 'light') {
+        document.body.classList.add('light-mode');
+        if (icon) icon.className = 'bi bi-sun';
+    } else {
+        document.body.classList.remove('light-mode');
+        if (icon) icon.className = 'bi bi-moon';
+    }
+    localStorage.setItem('theme', theme);
+}
+
+// === Sidebar (Burger Menu) Logic ===
+function openSidebar() {
+    document.querySelector('.sidebar').classList.add('open');
+    document.querySelector('.sidebar-overlay').classList.add('active');
+    document.querySelector('.burger-menu').classList.add('open');
+    document.body.classList.add('no-scroll');
+}
+function closeSidebar() {
+    document.querySelector('.sidebar').classList.remove('open');
+    document.querySelector('.sidebar-overlay').classList.remove('active');
+    document.querySelector('.burger-menu').classList.remove('open');
+    document.body.classList.remove('no-scroll');
+}
+// Responsive: Close sidebar if resizing to desktop
+window.addEventListener('resize', function() {
+    if(window.innerWidth > 767) closeSidebar();
+});
+
+// === Theme Toggle Button Event ===
+document.addEventListener('DOMContentLoaded', function() {
+    loadFinancialData();
+
+    // Initialize swipe functionality on existing swipeable rows
+    initializeSwipeableRows();
+
+    var themeBtn = document.getElementById('themeToggleBtn');
+    if (themeBtn) {
+        themeBtn.onclick = function() {
+            var isLight = document.body.classList.contains('light-mode');
+            setTheme(isLight ? 'dark' : 'light');
+        };
+    }
+
+    // On load, set language and theme
+    var lang = localStorage.getItem('lang');
+    if (!lang) {
+        var navLang = (navigator.languages && navigator.languages.length) ? navigator.languages[0] : navigator.language;
+        lang = navLang && navLang.toLowerCase().startsWith('pt') ? 'pt' : 'en';
+        localStorage.setItem('lang', lang);
+    }
+    setLanguage(lang);
+    var theme = localStorage.getItem('theme') || 'dark';
+    setTheme(theme);
+
+    // === Inline Editing    // Function to toggle edit mode when clicking edit button
+    window.toggleEdit = function(btn) {
+        // Use a more precise targeting approach to find the closest row first
+        var parent = btn.closest('div[id$="-row"]') || btn.closest('.row');
+        toggleEditDirectly(parent);
+    };
+    
+    // Function to toggle edit mode directly on a row (for swipe actions)
+    function toggleEditDirectly(rowElement) {
+        // Find the specific elements within the row
+        var valueSpan = rowElement.querySelector('.cs-edit-value');
+        var input = rowElement.querySelector('.edit-input');
+        var titleSpan = rowElement.querySelector('.cs-edit-title');
+        var titleInput = rowElement.querySelector('.edit-title-input');
+        var saveBtn = rowElement.querySelector('.cs-edit-btn');
+        var cancelBtn = rowElement.querySelector('.cs-cancel-btn');
+        
+        // Toggle visibility for input and span
+        valueSpan.classList.toggle('d-none');
+        input.classList.toggle('d-none');
+        if (titleSpan && titleInput) {
+            titleSpan.classList.toggle('d-none');
+            titleInput.classList.toggle('d-none');
+            titleInput.value = titleSpan.textContent.trim();
+        }
+        
+        // Toggle visibility for buttons
+        if (saveBtn) saveBtn.classList.toggle('d-none');
+        if (cancelBtn) cancelBtn.classList.toggle('d-none');
+        
+        // Set the input value and focus
+        input.value = valueSpan.textContent.trim();
+        input.focus();
+    };
+
+    window.saveEdit = function(btn) {
+        // Use the same improved targeting as toggleEdit
+        var parent = btn.closest('div[id$="-row"]') || btn.closest('.row');
+        var valueSpan = parent.querySelector('.cs-edit-value');
+        var input = parent.querySelector('.edit-input');
+        var titleSpan = parent.querySelector('.cs-edit-title');
+        var titleInput = parent.querySelector('.edit-title-input');
+        // Use a more specific selector to find the edit button with the pencil icon
+        var editBtn = parent.querySelector('button.cs-info');
+        var cancelBtn = parent.querySelector('button.cs-cancel-btn');
+        
+        // Save the new value
+        valueSpan.textContent = input.value;
+        
+        // If this field has a data-key, update our data model
+        if (valueSpan.hasAttribute('data-key')) {
+            var key = valueSpan.getAttribute('data-key');
+            // Extract numeric value from formatted currency
+            var numericValue = parseFloat(input.value.replace(/[^\d,.-]/g, '').replace(',', '.'));
+            
+            // Update calculated totals
+            updateCalculatedTotals(key, numericValue);
+        }
+        
+        valueSpan.classList.remove('d-none');
+        input.classList.add('d-none');
+        if (titleSpan && titleInput) {
+            titleSpan.textContent = titleInput.value;
+            titleSpan.classList.remove('d-none');
+            titleInput.classList.add('d-none');
+        }
+        btn.classList.add('d-none');
+        if (cancelBtn) {
+            cancelBtn.classList.add('d-none');
+        }
+        if (editBtn) {
+            editBtn.classList.remove('d-none');
+            
+            // Re-initialize tooltip for the edit button
+            if (window.bootstrap && editBtn.hasAttribute('title')) {
+                new bootstrap.Tooltip(editBtn);
+            }
+        }
+    };
+
+    
+    // Function to update calculated totals when values change
+    function updateCalculatedTotals() {
+        // --- PATRIMÔNIO SECTION ---
+        // Get asset values
+        var assets = parseFloatFromCurrency(document.querySelector('.cs-edit-value[data-key="assets"]').textContent);
+        var investments = parseFloatFromCurrency(document.querySelector('.cs-edit-value[data-key="investments"]').textContent);
+        var savings = parseFloatFromCurrency(document.querySelector('.cs-edit-value[data-key="savings"]').textContent);
+        var debts = parseFloatFromCurrency(document.querySelector('.cs-edit-value[data-key="debts"]').textContent);
+        
+        // Recalculate Patrimônio Total (Net Worth)
+        var netWorth = (assets + investments + savings) - debts;
+        var netWorthSpan = document.querySelector('.cs-edit-value[data-key="netWorth"]');
+        if (netWorthSpan) {
+            netWorthSpan.textContent = formatCurrencyBRL(netWorth.toString());
+        }
+        
+        // --- RECEITAS SECTION ---
+        var grossIncome = parseFloatFromCurrency(document.querySelector('.cs-edit-value[data-key="grossIncome"]').textContent);
+        var netIncome = parseFloatFromCurrency(document.querySelector('.cs-edit-value[data-key="netIncome"]').textContent);
+        
+        // --- GASTOS FIXOS SECTION ---
+        // Calculate total fixed expenses
+        var fixedExpensesTotal = 0;
+        var fixedExpensesCard = findCardByHeaderText('Gastos Fixos');
+        var fixedExpensesElements = fixedExpensesCard ? fixedExpensesCard.querySelectorAll('.row:not(:last-child) .cs-edit-value') : [];
+        
+        // Fallback to known value if DOM query doesn't work
+        if (fixedExpensesElements.length === 0) {
+            fixedExpensesTotal = parseFloatFromCurrency(document.querySelector('.cs-edit-value[data-key="fixedExpenses"]')?.textContent || '0');
+        } else {
+            fixedExpensesElements.forEach(function(el) {
+                fixedExpensesTotal += parseFloatFromCurrency(el.textContent);
+            });
+        }
+        
+        // Update total fixed expenses
+        var fixedExpensesTotalElement = fixedExpensesCard ? fixedExpensesCard.querySelector('.row:last-child .cs-edit-value') : null;
+        if (fixedExpensesTotalElement) {
+            fixedExpensesTotalElement.textContent = formatCurrencyBRL(fixedExpensesTotal.toString());
+        }
+        
+        // --- INVESTIMENTOS SECTION ---
+        // Calculate total investments
+        var investmentsTotal = 0;
+        var investmentsCard = findCardByHeaderText('Investimentos');
+        var investmentElements = investmentsCard ? investmentsCard.querySelectorAll('.cs-edit-value') : [];
+        investmentElements.forEach(function(el) {
+            investmentsTotal += parseFloatFromCurrency(el.textContent);
+        });
+        
+        // --- POUPANÇA/OBJETIVOS SECTION ---
+        // Calculate total savings goals
+        var savingsTotal = 0;
+        var savingsCard = findCardByHeaderText('Poupança/Objetivos');
+        var savingsElements = savingsCard ? savingsCard.querySelectorAll('.cs-edit-value') : [];
+        savingsElements.forEach(function(el) {
+            savingsTotal += parseFloatFromCurrency(el.textContent);
+        });
+        
+        // --- GASTOS LIVRES SECTION ---
+        // Calculate free spending (receita líquida - gastos fixos - investimentos - poupança)
+        var freeSpending = netIncome - fixedExpensesTotal - investmentsTotal - savingsTotal;
+        var freeSpendingElement = document.querySelector('.cs-edit-value[data-key="freeSpending"]');
+        if (freeSpendingElement) {
+            freeSpendingElement.textContent = formatCurrencyBRL(freeSpending.toString());
+        }
+        
+        // Calculate percentages and update badges
+        var fixedExpensesPerc = (fixedExpensesTotal / netIncome) * 100;
+        var investmentsPerc = (investmentsTotal / netIncome) * 100;
+        var savingsPerc = (savingsTotal / netIncome) * 100;
+        var freeSpendingPerc = (freeSpending / netIncome) * 100;
+        
+        // Update percentage badges
+        updatePercentageBadge('Gastos Fixos', fixedExpensesPerc);
+        updatePercentageBadge('Investimentos', investmentsPerc);
+        updatePercentageBadge('Poupança/Objetivos', savingsPerc);
+        updatePercentageBadge('Gastos Livres', freeSpendingPerc);
+    }
+    
+    // Helper function to find a card by header text
+    function findCardByHeaderText(text) {
+        var headers = document.querySelectorAll('.card-header');
+        for (var i = 0; i < headers.length; i++) {
+            if (headers[i].textContent.includes(text)) {
+                return headers[i].closest('.card');
+            }
+        }
+        return null;
+    }
+    
+    // Helper function to update percentage badges
+    function updatePercentageBadge(sectionTitle, percentage) {
+        var card = findCardByHeaderText(sectionTitle);
+        if (!card) return;
+        
+        var headerElement = card.querySelector('.card-header');
+        if (!headerElement) return;
+        
+        var badge = headerElement.querySelector('.badge');
+        if (!badge) return;
+        
+        // Format percentage to one decimal place
+        var formattedPerc = Math.round(percentage * 10) / 10;
+        
+        // Update badge text
+        badge.textContent = formattedPerc + '% ';
+        
+        // Add icon based on recommended ranges
+        var icon = document.createElement('i');
+        var isWithinRange = false;
+        
+        // Special case for Gastos Fixos which uses green for the target range
+        if (sectionTitle === 'Gastos Fixos') {
+            if (percentage > 60) {
+                // Over the recommended maximum - danger/red
+                icon.className = 'bi bi-arrow-up';
+                badge.classList.remove('text-success');
+                badge.classList.add('text-danger');
+                badge.classList.add('bg-dark');
+            } else if (percentage >= 50 && percentage <= 60) {
+                // Within target range - success/green (optimal for fixed expenses)
+                icon.className = 'bi bi-arrow-right';
+                badge.classList.remove('text-danger');
+                badge.classList.add('text-success');
+                badge.classList.add('bg-dark');
+            } else {
+                // Below the recommended minimum - danger/red with up arrow to indicate room to increase
+                icon.className = 'bi bi-arrow-up';
+                badge.classList.remove('text-success');
+                badge.classList.add('text-danger');
+                badge.classList.add('bg-dark');
+            }
+        } else {
+            // For all other sections, use normal logic
+            // Recommended ranges according to Ramit Sethi's conscious spending plan
+            switch(sectionTitle) {
+                case 'Investimentos':
+                    isWithinRange = (percentage <= 10);
+                    break;
+                case 'Poupança/Objetivos':
+                    isWithinRange = (percentage >= 5 && percentage <= 10);
+                    break;
+                case 'Gastos Livres':
+                    isWithinRange = (percentage >= 20 && percentage <= 35);
+                    break;
+            }
+            
+            // Set icon and color based on whether within recommended range
+            if (isWithinRange) {
+                icon.className = 'bi bi-arrow-right';
+                badge.classList.remove('text-danger');
+                badge.classList.add('text-success');
+            } else {
+                // If over recommended range
+                if ((sectionTitle === 'Investimentos' && percentage > 10) ||
+                    (sectionTitle === 'Poupança/Objetivos' && percentage > 10) ||
+                    (sectionTitle === 'Gastos Livres' && percentage > 35)) {
+                    icon.className = 'bi bi-arrow-up';
+                    badge.classList.remove('text-success');
+                    badge.classList.add('text-danger');
+                } else {
+                    icon.className = 'bi bi-arrow-down';
+                    badge.classList.remove('text-success');
+                    badge.classList.add('text-danger');
+                }
+            }
+        }
+        
+        // Replace any existing icon
+        var existingIcon = badge.querySelector('i');
+        if (existingIcon) {
+            badge.replaceChild(icon, existingIcon);
+        } else {
+            badge.appendChild(icon);
+        }
+    }
+    
+    // Helper function to parse currency formatted string to float
+    function parseFloatFromCurrency(currencyStr) {
+        if (!currencyStr) return 0;
+        const matches = currencyStr.match(/[0-9.,]+/g);
+        if (matches && matches.length > 0) {
+            const valueStr = matches[0].replace(/[.,]/g, '');
+            return parseFloat(valueStr) || 0;
+        }
+        return 0;
+    }
+
+    // === Currency Mask for Value Inputs ===
+    
+    async function loadFinancialData() {
+        try {
+            // Load main financial data
+            const mainResponse = await fetch('conscious-spending-data.json');
+            const data = await mainResponse.json();
+            
+            // First, update all fields except netWorth
+            document.querySelectorAll('.cs-edit-value[data-key]').forEach(function(span) {
+                const key = span.getAttribute('data-key');
+                if (key !== 'netWorth' && data[key] !== undefined) {
+                    span.textContent = formatCurrencyBRL(data[key].toString());
+                }
+            });
+            
+            // Calculate netWorth (Patrimônio Total)
+            const netWorth = (parseFloat(data.assets) + parseFloat(data.investments) + parseFloat(data.savings) - parseFloat(data.debts));
+            const netWorthSpan = document.querySelector('.cs-edit-value[data-key="netWorth"]');
+            if (netWorthSpan) {
+                netWorthSpan.textContent = formatCurrencyBRL(netWorth.toString());
+            }
+            
+            // Load fixed expenses (gastos fixos)
+            try {
+                const fixedExpensesResponse = await fetch('gastos-fixos.json');
+                const fixedExpensesData = await fixedExpensesResponse.json();
+                console.log('Loaded fixed expenses:', fixedExpensesData);
+                
+                // Get the fixed expenses section and find its card body
+                const fixedExpensesSection = findCardByHeaderText('Gastos Fixos');
+                if (fixedExpensesSection) {
+                    const cardBody = fixedExpensesSection.querySelector('.card-body');
+                    
+                    // Remove existing fixed expense rows (except the total row)
+                    const existingRows = cardBody.querySelectorAll('.swipeable-row-container');
+                    existingRows.forEach(row => row.remove());
+                    
+                    // Add each fixed expense from the JSON file
+                    let totalFixedExpenses = 0;
+                    fixedExpensesData.gastos_fixos.forEach(expense => {
+                        console.log('Adding expense:', expense.name, formatCurrencyBRL(expense.value.toString()));
+                        
+                        // Create HTML structure for the row
+                        const container = document.createElement('div');
+                        container.className = 'swipeable-row-container';
+                        
+                        const actions = document.createElement('div');
+                        actions.className = 'swipeable-row-actions';
+                        actions.innerHTML = `
+                            <div class="swipe-action swipe-action-edit" data-action="edit">
+                                <i class="bi bi-pencil-fill"></i>
+                            </div>
+                            <div class="swipe-action swipe-action-delete" data-action="delete">
+                                <i class="bi bi-trash"></i>
+                            </div>
+                        `;
+                        
+                        const content = document.createElement('div');
+                        content.className = 'swipeable-row-content';
+                        
+                        const row = document.createElement('div');
+                        row.className = 'row g-1 align-items-center';
+                        
+                        const labelCol = document.createElement('div');
+                        labelCol.className = 'col-8';
+                        labelCol.textContent = expense.name;
+                        
+                        const valueCol = document.createElement('div');
+                        valueCol.className = 'col-4 text-end d-flex align-items-center justify-content-end gap-2';
+                        
+                        const valueSpan = document.createElement('span');
+                        valueSpan.className = 'cs-edit-value';
+                        valueSpan.textContent = formatCurrencyBRL(expense.value.toString());
+                        
+                        const valueInput = document.createElement('input');
+                        valueInput.type = 'text';
+                        valueInput.className = 'edit-input d-none form-control form-control-sm text-end';
+                        valueInput.value = formatCurrencyBRL(expense.value.toString());
+                        
+                        const saveBtn = document.createElement('button');
+                        saveBtn.className = 'btn btn-link p-0 m-0 cs-edit-btn d-none';
+                        saveBtn.title = 'Salvar';
+                        saveBtn.setAttribute('onclick', 'saveEdit(this)');
+                        saveBtn.innerHTML = '<i class="bi bi-check-lg"></i>';
+                        
+                        // Assemble the structure
+                        valueCol.appendChild(valueSpan);
+                        valueCol.appendChild(valueInput);
+                        valueCol.appendChild(saveBtn);
+                        
+                        row.appendChild(labelCol);
+                        row.appendChild(valueCol);
+                        
+                        content.appendChild(row);
+                        container.appendChild(actions);
+                        container.appendChild(content);
+                        
+                        // Add the row before the total row
+                        const totalRow = cardBody.querySelector('.row.mt-2');
+                        if (totalRow) {
+                            cardBody.insertBefore(container, totalRow);
+                        } else {
+                            cardBody.appendChild(container);
+                        }
+                        
+                        // Initialize swipe functionality
+                        initSwipe(container);
+                        
+                        // Add to total
+                        totalFixedExpenses += expense.value;
+                    });
+                    
+                    // Update the total row
+                    const totalSpan = cardBody.querySelector('.row.mt-2 .text-end .cs-edit-value');
+                    if (totalSpan) {
+                        totalSpan.textContent = formatCurrencyBRL(totalFixedExpenses.toString());
+                        // Update the main data object for badges calculation
+                        data.totalFixedExpenses = totalFixedExpenses;
+                    }
+                }
+            } catch (fixedExpError) {
+                console.error('Erro ao carregar gastos fixos:', fixedExpError);
+            }
+            
+            // Run a complete calculation to update all totals and badges
+            setTimeout(updateCalculatedTotals, 100); // Small delay to ensure DOM is ready
+        } catch (e) {
+            console.error('Erro ao carregar dados financeiros:', e);
+        }
+    }
+
+    function formatCurrencyBRL(value) {
+        value = value.replace(/\D/g, '');
+        value = (parseInt(value, 10) / 100).toFixed(2) + '';
+        value = value.replace('.', ',');
+        value = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        return 'R$ ' + value;
+    }
+    function applyCurrencyMask(input) {
+        input.addEventListener('input', function(e) {
+            let val = input.value.replace(/\D/g, '');
+            if(val.length === 0) {
+                input.value = '';
+                return;
+            }
+            val = (parseInt(val, 10) / 100).toFixed(2);
+            val = val.replace('.', ',');
+            val = val.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            input.value = 'R$ ' + val;
+        });
+    }
+    // Apply mask to all current and future .edit-input fields
+    function maskAllEditInputs() {
+        document.querySelectorAll('.edit-input').forEach(function(input) {
+            if (!input.dataset.masked) {
+                applyCurrencyMask(input);
+                input.dataset.masked = 'true';
+            }
+        });
+    }
+    // Initial mask
+    maskAllEditInputs();
+    // Re-apply mask when a new row is added (by listening to DOM changes)
+    const observer = new MutationObserver(maskAllEditInputs);
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    // === Bootstrap Tooltips (if needed) ===
+    if (window.bootstrap) {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'));
+        tooltipTriggerList.forEach(function (el) {
+            // Don't initialize tooltips on elements that are in edit mode
+            if (!el.closest('.d-none')) {
+                new bootstrap.Tooltip(el);
+            }
+        });
+    }
+    
+    // Initialize swipe functionality on existing swipeable rows
+    function initializeSwipeableRows() {
+        // Find all swipeable row containers in the document
+        var containers = document.querySelectorAll('.swipeable-row-container');
+        
+        // Initialize swipe functionality for each container
+        containers.forEach(function(container) {
+            initSwipe(container);
+        });
+    }
+
+
+    
+// Initialize swipe functionality on existing swipeable rows
+function initializeSwipeableRows() {
+    // Find all swipeable row containers in the document
+    var containers = document.querySelectorAll('.swipeable-row-container');
+    
+    // Initialize swipe functionality for each container
+    containers.forEach(function(container) {
+        initSwipe(container);
+    });
+}
+
+// === Add Row Logic for Conscious Spending ===
+function createEditableRow(label, value, colLabel, colValue) {
+    // Default columns if not provided
+    colLabel = colLabel || 'col-8';
+    colValue = colValue || 'col-4';
+    const row = document.createElement('div');
+    row.className = 'row g-1 align-items-center';
+    
+    // Label column
+    const labelCol = document.createElement('div');
+    labelCol.className = colLabel;
+    labelCol.textContent = label;
+    
+    // Value column with editability
+    const valueCol = document.createElement('div');
+    valueCol.className = colValue + ' text-end d-flex align-items-center justify-content-end gap-2';
+    
+    // Create value span
+    const valueSpan = document.createElement('span');
+    valueSpan.className = 'cs-edit-value';
+    valueSpan.textContent = value;
+    
+    // Create value input
+    const valueInput = document.createElement('input');
+    valueInput.type = 'text';
+    valueInput.className = 'edit-input d-none form-control form-control-sm text-end';
+    valueInput.value = value;
+    
+    // Create save button
+    const saveBtn = document.createElement('button');
+    saveBtn.className = 'btn btn-link p-0 m-0 cs-edit-btn d-none';
+    saveBtn.title = 'Salvar';
+    saveBtn.setAttribute('onclick', 'saveEdit(this)');
+    saveBtn.innerHTML = '<i class="bi bi-check-lg"></i>';
+    
+    // Append all elements to value column
+    valueCol.appendChild(valueSpan);
+    valueCol.appendChild(valueInput);
+    valueCol.appendChild(saveBtn);
+    
+    // Append columns to row
+    row.appendChild(labelCol);
+    row.appendChild(valueCol);
+    
+    return row;
+}
+
+// Function to cancel editing and remove a row
+window.cancelEdit = function(btn) {
+    var row = btn.closest('.row');
+    if (row) {
+        row.remove();
+        // Update calculations after removing the row
+        updateCalculatedTotals();
+    }
+};
+    
+// Function to delete an existing row
+window.deleteRow = function(element) {
+    if (confirm('Tem certeza que deseja excluir este item?')) {
+        // First check if it's a swipe action or a button click
+        var isSwipeAction = element.classList && element.classList.contains('swipe-action-delete');
+        var container;
+        
+        if (isSwipeAction) {
+            container = element.closest('.swipeable-row-container');
+        } else {
+            // For button clicks, find either the container or the row directly
+            container = element.closest('.swipeable-row-container') || element.closest('.row');
+        }
+        
+        if (container) {
+            container.remove();
+        var row = btn.closest('.row');
+        if (row) {
+            row.remove();
+            // Update calculations after removing the row
+            updateCalculatedTotals();
+        }
+    };
+    
+    // Function to delete an existing row
+    window.deleteRow = function(element) {
+        if (confirm('Tem certeza que deseja excluir este item?')) {
+            // First check if it's a swipe action or a button click
+            var isSwipeAction = element.classList && element.classList.contains('swipe-action-delete');
+            var container;
+            
+            if (isSwipeAction) {
+                container = element.closest('.swipeable-row-container');
+            } else {
+                // For button clicks, find either the container or the row directly
+                container = element.closest('.swipeable-row-container') || element.closest('.row');
+            }
+            
+            if (container) {
+                container.remove();
+                // Update calculations after removing the row
+                updateCalculatedTotals();
+            }
+        }
+    };
+    
+    // Initialize swipe functionality for a row - improved implementation
+    function initSwipe(container) {
+        const content = container.querySelector('.swipeable-row-content');
+        const actions = container.querySelector('.swipeable-row-actions');
+        
+        let startX = 0;
+        let currentX = 0;
+        let offsetX = 0;
+        let isSwiping = false;
+        
+        // Event handlers for mouse/touch events
+        const handleStart = (e) => {
+            // Prevent swiping if we're in edit mode
+            const row = content.querySelector('.row');
+            if (row && row.querySelector('.edit-input:not(.d-none)')) {
+                return;
+            }
+            
+            isSwiping = true;
+            startX = getPositionX(e);
+            currentX = startX;
+            
+            document.addEventListener('mousemove', handleMove);
+            document.addEventListener('touchmove', handleMove);
+            document.addEventListener('mouseup', handleEnd);
+            document.addEventListener('touchend', handleEnd);
+        };
+        
+        const handleMove = (e) => {
+            if (!isSwiping) return;
+            
+            currentX = getPositionX(e);
+            offsetX = currentX - startX;
+            
+            // Restrict to left swipe only (negative offset) and limit the distance
+            if (offsetX < 0) {
+                const translateX = Math.max(offsetX, -120); // Limit to -120px
+                content.style.transform = `translateX(${translateX}px)`;
+            }
+        };
+        
+        const handleEnd = () => {
+            isSwiping = false;
+            
+            // If swiped far enough, snap to show action buttons
+            if (offsetX < -50) {
+                content.style.transform = 'translateX(-120px)';
+            } else {
+                content.style.transform = 'translateX(0)';
+            }
+            
+            // Remove event listeners
+            document.removeEventListener('mousemove', handleMove);
+            document.removeEventListener('touchmove', handleMove);
+            document.removeEventListener('mouseup', handleEnd);
+            document.removeEventListener('touchend', handleEnd);
+        };
+        
+        // Helper to get position for both mouse and touch events
+        const getPositionX = (e) => {
+            return e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
+        };
+        
+        // Add event listeners
+        content.addEventListener('mousedown', handleStart);
+        content.addEventListener('touchstart', handleStart);
+        
+        // Handle clicks on action buttons
+        if (actions) {
+            actions.querySelectorAll('.swipe-action').forEach(action => {
+                action.addEventListener('click', function() {
+                    const actionType = this.getAttribute('data-action');
+                    const row = content.querySelector('.row');
+                    
+                    if (actionType === 'edit') {
+                        // Call toggleEdit directly on the row since we don't have the edit button anymore
+                        toggleEditDirectly(row);
+                        // Reset the row position after toggling edit mode
+                        content.style.transform = 'translateX(0)';
+                    } else if (actionType === 'delete') {
+                        deleteRow(this);
+                    }
+                });
+            });
+        }
+        
+        // Double tap to reset position
+        content.addEventListener('dblclick', function() {
+            content.style.transform = 'translateX(0)';
+        });
+        
+        // Tap anywhere else to reset all swiped rows
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.swipeable-row-container') && 
+                !e.target.closest('.swipe-action')) {
+                // Reset all swiped rows
+                document.querySelectorAll('.swipeable-row-content').forEach(el => {
+                    el.style.transform = 'translateX(0)';
+                });
+            }
+        });
+    };
+    
+    // Helper function to add a swipeable row
+    function addSwipeableRow(cardBody, rowTitle, initialValue, colLabel, colValue) {
+        
+        // Wrap it in the swipeable container structure
+        const container = document.createElement('div');
+    
+        
+        // Create the content wrapper
+        const content = document.createElement('div');
+        content.className = 'swipeable-row-content';
+        
+        
+        // Initialize swipe functionality
+        initSwipe(container);
+        
+        // Add to the card body
+        cardBody.appendChild(container);
+        
+        // Immediately show edit mode for the new row
+        toggleEditDirectly(row);
+        
+        return container;
+    }
+    
+    // Gastos Fixos
+    var addFixedBtn = document.getElementById('add-fixed-btn');
+    if (addFixedBtn) {
+        addFixedBtn.addEventListener('click', function() {
+            var cardBody = addFixedBtn.closest('.card').querySelector('.card-body');
+            addSwipeableRow(cardBody, 'Nova Despesa', 'R$ 0,00', 'col-8', 'col-4');
+        });
+    }
+    
+    // Investimentos
+    var addInvestBtn = document.getElementById('add-invest-btn');
+    if (addInvestBtn) {
+        addInvestBtn.addEventListener('click', function() {
+            var cardBody = addInvestBtn.closest('.card').querySelector('.card-body');
+            addSwipeableRow(cardBody, 'Novo Investimento', 'R$ 0,00', 'col-8', 'col-4');
+        });
+    }
+    
+    // Poupança/Objetivos
+    var addSavingsBtn = document.getElementById('add-savings-btn');
+    if (addSavingsBtn) {
+        addSavingsBtn.addEventListener('click', function() {
+            var cardBody = addSavingsBtn.closest('.card').querySelector('.card-body');
+            addSwipeableRow(cardBody, 'Novo Objetivo', 'R$ 0,00', 'col-7', 'col-3');
+        });
+    }
+    
+    // Gastos Livres is a calculation, not a section for adding rows
+});

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vida Rica - Objetivos Financeiros</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="styles.css">
+       
+</head>
+<body class="dashboard">
+    <div class="sidebar-overlay"></div>
+    <!-- Sidebar -->
+    <nav class="sidebar">
+        <div class="sidebar-logo">
+            <img src="./images/logo.png" alt="Vida Rica">
+        </div>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="dashboard.html">
+                    <i class="bi bi-speedometer2"></i>
+                    <span class="en">Dashboard</span><span class="pt" style="display:none;">Painel</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="conscious-spending.html">
+                    <i class="bi bi-wallet2"></i>
+                    <span class="en">Spending Plan</span><span class="pt" style="display:none;">Plano de Gastos</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#automation">
+                    <i class="bi bi-robot"></i>
+                    <span class="en">Automation</span><span class="pt" style="display:none;">Automação</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="objetivos.html">
+                    <i class="bi bi-piggy-bank"></i>
+                    <span class="en">Financial Goals</span><span class="pt" style="display:none;">Objetivos Financeiros</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="investimentos.html">
+                    <i class="bi bi-graph-up"></i>
+                    <span class="en">Investments</span><span class="pt" style="display:none;">Investimentos</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#rich-life">
+                    <i class="bi bi-stars"></i>
+                    <span class="en">My Rich Life</span><span class="pt" style="display:none;">Minha Vida Rica</span>
+                </a>
+            </li>
+        
+        </ul>
+
+        <div class="sidebar-profile-bar d-flex align-items-center justify-content-between px-3">
+            <div class="d-flex align-items-center gap-2">
+                <div class="user-avatar me-2">JS</div>
+                <div>
+                    <div class="fw-bold en">João Silva</div>
+                    <div class="fw-bold pt" style="display:none;">João Silva</div>
+                    <small class="text-muted">Premium</small>
+                </div>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <button id="themeToggleBtn" class="btn btn-link p-0 m-0 d-flex align-items-center" aria-label="Toggle dark/light mode" title="Toggle dark/light mode">
+                    <i id="themeIcon" class="bi bi-moon"></i>
+                </button>
+                <a href="/settings" class="ms-2" title="Settings"><i class="bi bi-gear" style="font-size:1.3em;"></i></a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <header class="dashboard-header d-flex align-items-center justify-content-between mb-4">
+            <button class="burger-menu d-md-none" aria-label="Abrir menu">
+                <i class="bi bi-list"></i>
+            </button>
+            <h1 class="en">Financial Goals</h1>
+            <h1 class="pt" style="display:none;">Objetivos Financeiros</h1>
+        </header>
+
+        <!-- Objetivos e Investimentos Content -->
+        <div class="objetivos-container">
+            <!-- Goals will be loaded here dynamically -->
+            <div class="loading-placeholder text-center py-5">
+                <div class="spinner-border text-gold" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-3 text-muted">Carregando seus objetivos...</p>
+            </div>
+
+            <!-- Add New Goal Button -->
+            <div class="add-goal-container text-center mt-4">
+                <button id="add-goal-btn" class="btn btn-dark rounded-circle add-btn">
+                    <i class="bi bi-plus-lg"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Adding/Editing Goals -->
+    <div class="modal fade" id="goalModal" tabindex="-1" aria-labelledby="goalModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content theme-aware-modal">
+                <div class="modal-header bg-blue text-gold">
+                    <h5 class="modal-title" id="goalModalLabel">Novo Objetivo</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="goalForm" class="needs-validation" novalidate>
+                        <input type="hidden" id="goalId" value="">
+                        <div class="mb-4">
+                            <label for="goalName" class="form-label fw-bold">Nome do Objetivo</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-blue text-gold"><i class="bi bi-bookmark-star"></i></span>
+                                <input type="text" class="form-control" id="goalName" placeholder="Ex: Viagem para Europa" required>
+                                <div class="invalid-feedback">
+                                    Por favor, informe um nome para o objetivo.
+                                </div>
+                            </div>
+                            <small class="text-muted">Dê um nome significativo para seu objetivo financeiro.</small>
+                        </div>
+                        <div class="mb-4">
+                            <label for="goalTarget" class="form-label fw-bold">Valor Alvo (R$)</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-blue text-gold"><i class="bi bi-currency-dollar"></i></span>
+                                <input type="text" class="form-control currency-input" id="goalTarget" placeholder="0,00" required>
+                                <div class="invalid-feedback">
+                                    Por favor, informe um valor alvo válido.
+                                </div>
+                            </div>
+                            <small class="text-muted">Defina quanto você precisa economizar para atingir esse objetivo.</small>
+                        </div>
+                        <div class="mb-3">
+                            <label for="goalDate" class="form-label fw-bold">Data Alvo</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-blue text-gold"><i class="bi bi-calendar-event"></i></span>
+                                <input type="date" class="form-control" id="goalDate">
+                            </div>
+                            <small class="text-muted">Opcional: quando você planeja atingir esse objetivo?</small>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle me-1"></i> Cancelar
+                    </button>
+                    <button type="button" class="btn btn-gold" id="saveGoalBtn">
+                        <i class="bi bi-check-circle me-1"></i> Salvar Objetivo
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Adding Contributions -->
+    <div class="modal fade" id="contributionModal" tabindex="-1" aria-labelledby="contributionModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content theme-aware-modal">
+                <div class="modal-header bg-blue text-gold">
+                    <h5 class="modal-title" id="contributionModalLabel">Novo Aporte</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="contributionForm" class="needs-validation" novalidate>
+                        <input type="hidden" id="contributionGoalId" value="">
+                        <div class="mb-4">
+                            <label for="contributionMonth" class="form-label fw-bold">Mês</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-blue text-gold"><i class="bi bi-calendar-month"></i></span>
+                                <select class="form-select" id="contributionMonth" required>
+                                    <option value="" selected disabled>Selecione o mês</option>
+                                    <option value="1">Janeiro</option>
+                                    <option value="2">Fevereiro</option>
+                                    <option value="3">Março</option>
+                                    <option value="4">Abril</option>
+                                    <option value="5">Maio</option>
+                                    <option value="6">Junho</option>
+                                    <option value="7">Julho</option>
+                                    <option value="8">Agosto</option>
+                                    <option value="9">Setembro</option>
+                                    <option value="10">Outubro</option>
+                                    <option value="11">Novembro</option>
+                                    <option value="12">Dezembro</option>
+                                </select>
+                                <div class="invalid-feedback">
+                                    Por favor, selecione o mês do aporte.
+                                </div>
+                            </div>
+                            <small class="text-muted">Em qual mês você fez essa contribuição?</small>
+                        </div>
+                        <div class="mb-4">
+                            <label for="contributionAmount" class="form-label fw-bold">Valor do Aporte (R$)</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-blue text-gold"><i class="bi bi-cash"></i></span>
+                                <input type="text" class="form-control currency-input" id="contributionAmount" placeholder="0,00" required>
+                                <div class="invalid-feedback">
+                                    Por favor, informe o valor do aporte.
+                                </div>
+                            </div>
+                            <small class="text-muted">Quanto você contribuiu para este objetivo?</small>
+                        </div>
+                        <div class="mb-3">
+                            <label for="contributionDate" class="form-label fw-bold">Data do Aporte</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-blue text-gold"><i class="bi bi-calendar-date"></i></span>
+                                <input type="date" class="form-control" id="contributionDate">
+                            </div>
+                            <small class="text-muted">Opcional: em qual data específica você fez o aporte?</small>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle me-1"></i> Cancelar
+                    </button>
+                    <button type="button" class="btn btn-gold" id="saveContributionBtn">
+                        <i class="bi bi-check-circle me-1"></i> Salvar Aporte
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="main.js"></script>
+    <script src="objetivos.js"></script>
+</body>
+</html>

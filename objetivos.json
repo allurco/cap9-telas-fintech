@@ -1,0 +1,25 @@
+{
+  "goals": [
+    {
+      "id": "goal1",
+      "name": "Viagem Europa",
+      "target": 8000,
+      "contributions": [
+        { "month": 1, "amount": 200 },
+        { "month": 2, "amount": 200 },
+        { "month": 3, "amount": 200 },
+        { "month": 4, "amount": 200 },
+        { "month": 5, "amount": 200 },
+        { "month": 6, "amount": 200 },
+        { "month": 7, "amount": 200 },
+        { "month": 8, "amount": 200 }
+      ]
+    },
+    {
+      "id": "goal2",
+      "name": "Novo Carro",
+      "target": 30000,
+      "contributions": []
+    }
+  ]
+}
