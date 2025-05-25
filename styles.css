@@ -99,38 +99,58 @@ body.dashboard.light-mode {
 .sidebar-profile-bar {
     height: 72px;
     width: 100%;
-    background: var(--gold);
+    background: rgba(255, 255, 255, 0.05);
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding-left: var(--spacing-sm);
     padding-right: var(--spacing-sm);
-    border-top: 1px solid rgba(95,77,29,0.12);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-left: 4px solid var(--gold);
 }
 
 .sidebar-profile-bar .user-avatar {
-    width: 48px;
-    height: 48px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
-    background: #fff;
-    color: var(--blue-dark);
+    background: rgba(218, 190, 114, 0.12);
+    color: var(--gold);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: bold;
-    font-size: 1.25rem;
-    border: 2px solid var(--gold-dark);
+    font-weight: 600;
+    font-size: 1.1rem;
+    border: 2px solid var(--gold);
+    box-shadow: 0 0 0 2px rgba(218, 190, 114, 0.1);
+    transition: all var(--transition-fast);
 }
 
-.sidebar-profile-bar .fw-bold,
+.sidebar-profile-bar .user-avatar:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 4px rgba(218, 190, 114, 0.2);
+}
+
+.sidebar-profile-bar .fw-bold {
+    color: var(--gold) !important;
+    font-weight: 500;
+}
+
 .sidebar-profile-bar small {
-    color: var(--gold-dark) !important;
+    color: rgba(255, 255, 255, 0.7) !important;
+    font-size: 0.8rem;
 }
 
 .sidebar-profile-bar .bi-gear,
 .sidebar-profile-bar .bi-moon,
 .sidebar-profile-bar .bi-sun {
-    color: var(--gold-dark) !important;
+    color: var(--gold) !important;
+    transition: transform var(--transition-fast);
+}
+
+.sidebar-profile-bar .bi-gear:hover,
+.sidebar-profile-bar .bi-moon:hover,
+.sidebar-profile-bar .bi-sun:hover {
+    transform: rotate(15deg);
 }
 
 .sidebar-logo {
