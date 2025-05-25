@@ -67,6 +67,9 @@ body.dashboard {
     font-weight: 400; /* Regular */
     line-height: 1.5;
     transition: background 0.3s, color 0.3s;
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
 }
 
 body.dashboard.light-mode {
@@ -335,6 +338,7 @@ body.dashboard.light-mode .card-header {
 
 /* === Responsive === */
 @media (max-width: 767px) {
+    /* General Mobile Styles */
     .sidebar {
         width: 75vw;
         max-width: 350px;
@@ -351,6 +355,72 @@ body.dashboard.light-mode .card-header {
         overflow-y: auto;
         padding-bottom: 72px; /* Prevent content from being hidden */
     }
+    
+    /* Conscious Spending Mobile Styles */
+    /* Completely reset container spacing for conscious-spending */
+    .conscious-spending .container-fluid {
+        padding: 0 !important;
+        margin: 0 !important;
+        max-width: none !important;
+        width: 100% !important;
+    }
+    
+    /* Override any Bootstrap container padding */
+    .conscious-spending .container,
+    .conscious-spending .container-fluid,
+    .conscious-spending .container-sm,
+    .conscious-spending .container-md,
+    .conscious-spending .container-lg,
+    .conscious-spending .container-xl,
+    .conscious-spending .container-xxl {
+        --bs-gutter-x: 0 !important;
+        --bs-gutter-y: 0 !important;
+    }
+    
+    .main-content {
+        overflow-x: hidden;
+    }
+    
+    .conscious-cards-wrapper {
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+    }
+    
+    /* Full-width cards for conscious-spending - eliminate all margins */
+    .conscious-spending .conscious-cards-wrapper {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    /* Override any row margins */
+    .conscious-spending .row {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+    
+    .conscious-spending .conscious-cards-wrapper > .card,
+    .conscious-spending .conscious-cards-wrapper > .cs-section,
+    .conscious-spending .cs-section,
+    .conscious-spending .cs-section.card,
+    .conscious-spending .cs-section .card {
+        width: 100vw !important;
+        max-width: 100vw !important;
+        border-radius: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+    }
+    
+    .cs-section .card-header {
+        border-radius: 0 !important;
+    }
+    
+    /* Remove spacing between cards */
+    .cs-section + .cs-section {
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+    }
 
     .sidebar.open {
         left: 0;
@@ -366,8 +436,50 @@ body.dashboard.light-mode .card-header {
         margin-top: 0;
     }
 
-    .card, .card-header {
+    /* Mobile card styling for most pages */
+    .card {
+        border-radius: var(--t--borders-radius-rounded-lg) !important;
+        margin-bottom: var(--spacing-sm) !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08) !important;
+    }
+    
+    /* Exception for conscious-spending - edge-to-edge cards with no margins */
+    .conscious-spending .conscious-cards-wrapper > .card,
+    .conscious-spending .conscious-cards-wrapper > .cs-section,
+    .conscious-spending .cs-section,
+    .conscious-spending .cs-section.card,
+    .conscious-spending .cs-section .card {
+        width: 100% !important;
+        max-width: 100% !important;
         border-radius: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+    }
+    
+    .conscious-spending .card-header {
+        border-radius: 0 !important;
+    }
+    
+    /* Remove spacing between cards */
+    .conscious-spending .cs-section + .cs-section {
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+    }
+    
+    /* Heading adjustments for consistent mobile layout */
+    .section-title {
+        font-size: 1rem !important;
+    }
+    
+    .section-title i {
+        font-size: 1rem !important;
+        margin-right: 6px !important;
+    }
+    
+    /* Dashboard cards spacing */
+    .dashboard-card {
+        margin-bottom: var(--spacing-sm) !important;
     }
 
     .sidebar-overlay {
@@ -402,6 +514,44 @@ body.dashboard.light-mode .card-header {
 
     .main-content {
         margin-left: 0 !important;
+    }
+    
+    /* Conscious-spending specific layout */
+    .main-content .dashboard-header {
+        padding-left: var(--spacing-sm);
+        padding-right: var(--spacing-sm);
+    }
+    
+    /* Adjust page header on mobile for all pages */
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start !important;
+        padding: var(--spacing-sm) !important;
+        margin-bottom: var(--spacing-sm) !important;
+    }
+    
+    /* Adjust heading size and motivational message for mobile */
+    .dashboard-header h1 {
+        font-size: 1.5rem !important;
+        margin-bottom: 4px !important;
+    }
+    
+    .user-greeting {
+        margin-top: 0 !important;
+    }
+    
+    .user-greeting p,
+    .dashboard-header .text-muted,
+    .dashboard-header small {
+        font-size: 0.9rem !important;
+        margin-bottom: 0 !important;
+        line-height: 1.3 !important;
+    }
+    
+    /* Remove all padding and margins from main content area */
+    .conscious-spending .main-content {
+        padding: 0 !important;
+        margin: 0 !important;
     }
 }
 
