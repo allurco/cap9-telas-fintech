@@ -41,6 +41,7 @@
     /* Component sizes */
     --sidebar-width: 240px;
     --header-height: 80px;
+    --otp-size: 32px; /* Size for OTP input boxes */
     
     /* Transitions */
     --transition-fast: 0.2s ease;
@@ -201,6 +202,8 @@ body.dashboard.light-mode {
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
+
+/* Sidebar labels (Premium, etc.) continue... */
 
 .nav-link .bi {
     margin-right: var(--spacing-sm);
@@ -915,14 +918,28 @@ body.no-scroll {
 .otp-input {
     width: var(--otp-size) !important;
     height: var(--otp-size) !important;
-    font-size: 1.5rem !important;
+    font-size: 0.95rem !important;
     padding: 0 !important;
     text-align: center !important;
-    border-radius: 8px !important;
+    border-radius: 4px !important;
     border: 1px solid rgba(255, 255, 255, 0.2) !important;
     background-color: rgba(255, 255, 255, 0.05) !important;
     color: var(--text-light) !important;
-    transition: all 0.2s ease;
+    margin: 0 2px !important;
+    aspect-ratio: 1 !important;
+    transition: all var(--transition-fast);
+}
+
+/* Mobile responsiveness for OTP inputs */
+@media (max-width: 400px) {
+    :root {
+        --otp-size: 24px; /* Smaller size for mobile */
+    }
+    
+    .otp-input {
+        font-size: 0.8rem !important;
+        margin: 0 1px !important;
+    }
 }
 
 .otp-input:focus {
