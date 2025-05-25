@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="register.title">Vida Rica - Cadastro</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="d-flex flex-column justify-content-center align-items-center body-login">
+
+    <div id="main-container" style="width: 100%" class="d-flex flex-column justify-content-center align-items-center">
+        <img src="./images/logo.png" class="mb-4" />
+        <h2 class="text-light mb-4" data-i18n="register.heading">Crie sua conta</h2>
+        
+        <form action="password.html" method="GET" class="text-center d-flex flex-column align-items-center w-100" style="max-width: 320px;" id="registerForm" novalidate>
+            <!-- Name Field -->
+            <div class="mb-3 w-100">
+                <input type="text" class="form-control form-control-lg" id="name" name="name" required data-i18n-placeholder="register.namePlaceholder" placeholder="NOME COMPLETO">
+                <div class="invalid-feedback text-start" data-i18n="register.invalidName">Nome deve ter pelo menos 3 caracteres</div>
+            </div>
+            
+            <!-- Email Field -->
+            <div class="mb-3 w-100">
+                <input type="email" class="form-control form-control-lg" id="email" name="email" required data-i18n-placeholder="register.emailPlaceholder" placeholder="E-MAIL" autocomplete="email">
+                <div class="invalid-feedback text-start" data-i18n="register.invalidEmail">Formato de e-mail inválido</div>
+            </div>
+            
+            <!-- Phone Field -->
+            <div class="mb-4 w-100">
+                <input type="tel" class="form-control form-control-lg" id="phone" name="phone" required data-i18n-placeholder="register.phonePlaceholder" placeholder="TELEFONE" autocomplete="tel">
+                <div class="invalid-feedback text-start" data-i18n="register.invalidPhone">Formato de telefone inválido</div>
+            </div>
+            
+            <button type="submit" class="btn login w-100 mb-3" data-i18n="register.submit">CRIAR CONTA</button>
+            
+            <p class="text-light mb-4" style="font-size: 0.9rem;">
+                <span data-i18n="register.alreadyHaveAccount">Já possui uma conta?</span> 
+                <a href="index.html" class="gold-link" data-i18n="register.login">Entrar</a>
+            </p>
+        </form>
+    </div>
+     
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    
+    <!-- Translation System -->
+    <script src="translations.js"></script>
+    <script src="language.js"></script>
+    <script>
+        // Initialize language on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedLanguage = localStorage.getItem('lang') || 'en';
+            if (typeof applyTranslations === 'function') {
+                applyTranslations(savedLanguage);
+            }
+            
+            // Form validation
+            const registerForm = document.getElementById('registerForm');
+            const nameInput = document.getElementById('name');
+            const emailInput = document.getElementById('email');
+            const phoneInput = document.getElementById('phone');
+            
+            registerForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                
+                // Reset previous validation states
+                nameInput.classList.remove('is-invalid');
+                emailInput.classList.remove('is-invalid');
+                phoneInput.classList.remove('is-invalid');
+                
+                let isValid = true;
+                
+                // Name validation
+                if (nameInput.value.trim().length < 3) {
+                    nameInput.classList.add('is-invalid');
+                    isValid = false;
+                }
+                
+                // Email validation
+                const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                if (!emailRegex.test(emailInput.value.trim())) {
+                    emailInput.classList.add('is-invalid');
+                    isValid = false;
+                }
+                
+                // Phone validation (Brazilian format)
+                const phoneRegex = /^(\+55)?\s*\(?[1-9]{2}\)?\s*(?:9\s*)?[0-9]{4}[\s-]?[0-9]{4}$/;
+                const digitsOnlyRegex = /^[0-9]{10,11}$/;
+                
+                if (!phoneRegex.test(phoneInput.value.trim()) && !digitsOnlyRegex.test(phoneInput.value.trim())) {
+                    phoneInput.classList.add('is-invalid');
+                    isValid = false;
+                }
+                
+                if (isValid) {
+                    // Store registration data in localStorage for persistence
+                    localStorage.setItem('registerName', nameInput.value.trim());
+                    localStorage.setItem('registerEmail', emailInput.value.trim());
+                    localStorage.setItem('registerPhone', phoneInput.value.trim());
+                    
+                    // Append email to the URL for the OTP verification page
+                    const redirectUrl = `password.html?email=${encodeURIComponent(emailInput.value.trim())}&isRegistration=true`;
+                    window.location.href = redirectUrl;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
