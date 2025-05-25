@@ -6,7 +6,7 @@
     <title>Vida Rica - Dashboard</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="styles.css">
@@ -83,15 +83,21 @@
     </button>
             <h1 class="en">Dashboard</h1>
             <h1 class="pt" style="display:none;">Painel</h1>
+            <div class="user-greeting mt-2">
+                <p>Welcome back, <strong>Ramit</strong>! <span class="text-gold">Let's build your Rich Life today.</span></p>
+            </div>
 
         </header>
         <div class="row">
             <div class="col-lg-8">
                 <!-- Financial Overview Card -->
-                <div class="card mb-4">
+                <div class="card mb-4 dashboard-card">
                     <div class="card-header">
-                        <span class="en">Financial Overview</span>
-                        <span class="pt" style="display:none;">Visão Geral Financeira</span>
+                        <div class="section-title">
+                            <i class="bi bi-wallet-fill"></i>
+                            <span class="en">Financial Overview</span>
+                            <span class="pt" style="display:none;">Resumo Financeiro</span>
+                        </div>
                     </div>
                     <div class="card-body">
                         <div class="row text-center">
@@ -114,10 +120,13 @@
                     </div>
                 </div>
                 <!-- Conscious Spending Plan Card -->
-                <div class="card mb-4" id="conscious-spending">
+                <div class="card mb-4 dashboard-card" id="conscious-spending">
                     <div class="card-header">
-                        <span class="en">Conscious Spending Plan</span>
-                        <span class="pt" style="display:none;">Plano de Gastos Conscientes</span>
+                        <div class="section-title">
+                            <i class="bi bi-cash-coin"></i>
+                            <span class="en">Conscious Spending Plan</span>
+                            <span class="pt" style="display:none;">Plano de Gastos Conscientes</span>
+                        </div>
                     </div>
                     <div class="card-body p-0">
                         <div class="table-responsive">
@@ -188,33 +197,75 @@
             <!-- Right Sidebar -->
             <div class="col-lg-4">
                 <!-- Rich Life Goals -->
-                <div class="card mb-4" id="rich-life">
+                <div class="card mb-4 dashboard-card" id="rich-life">
                     <div class="card-header">
-                        <span class="en">My Rich Life</span>
-                        <span class="pt" style="display:none;">Minha Vida Rica</span>
+                        <div class="section-title">
+                            <i class="bi bi-emoji-smile-fill"></i>
+                            <span class="en">My Rich Life</span>
+                            <span class="pt" style="display:none;">Minha Vida Rica</span>
+                        </div>
                     </div>
                     <div class="card-body">
-                        <div class="mb-3">
-                            <div class="d-flex justify-content-between mb-1">
-                                <span class="en">Trip to Japan</span>
-                                <span class="pt" style="display:none;">Viagem para o Japão</span>
-                                <span>65%</span>
-                            </div>
-                            <div class="progress" style="height: 6px; background-color: rgba(255,255,255,0.1);">
-                                <div class="progress-bar bg-warning" role="progressbar" style="width: 65%;" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="rich-life-progress">
+                            <h4 class="mb-3 en">Financial Freedom Progress</h4>
+                            <h4 class="mb-3 pt" style="display:none;">Progresso para Liberdade Financeira</h4>
+                            
+                            <div class="circular-progress" style="--progress: 65%">
+                                <div class="circular-progress-value">65%</div>
                             </div>
                             <small class="text-muted">R$ 13,000 / R$ 20,000</small>
                         </div>
-                        <div class="mb-3">
-                            <div class="d-flex justify-content-between mb-1">
-                                <span class="en">Emergency Fund</span>
-                                <span class="pt" style="display:none;">Fundo de Emergência</span>
-                                <span>90%</span>
+                        <div class="rich-life-categories mt-4">
+                            <h5 class="mb-3 en">Rich Life Categories</h5>
+                            <h5 class="mb-3 pt" style="display:none;">Categorias de Vida Rica</h5>
+                            
+                            <div class="financial-summary-card">
+                                <div class="financial-summary-icon">
+                                    <i class="bi bi-piggy-bank-fill"></i>
+                                </div>
+                                <div class="financial-summary-content">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h6 class="mb-0 en">Savings</h6>
+                                        <h6 class="mb-0 pt" style="display:none;">Economias</h6>
+                                        <span class="badge bg-success rounded-pill">$2,500</span>
+                                    </div>
+                                    <div class="progress mt-2" style="height: 6px;">
+                                        <div class="progress-bar bg-success" role="progressbar" style="width: 85%" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="progress" style="height: 6px; background-color: rgba(255,255,255,0.1);">
-                                <div class="progress-bar bg-success" role="progressbar" style="width: 90%;" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
+                            
+                            <div class="financial-summary-card">
+                                <div class="financial-summary-icon">
+                                    <i class="bi bi-graph-up-arrow"></i>
+                                </div>
+                                <div class="financial-summary-content">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h6 class="mb-0 en">Investments</h6>
+                                        <h6 class="mb-0 pt" style="display:none;">Investimentos</h6>
+                                        <span class="badge bg-primary rounded-pill">$1,800</span>
+                                    </div>
+                                    <div class="progress mt-2" style="height: 6px;">
+                                        <div class="progress-bar bg-primary" role="progressbar" style="width: 65%" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
                             </div>
-                            <small class="text-muted">R$ 45,000 / R$ 50,000</small>
+                            
+                            <div class="financial-summary-card">
+                                <div class="financial-summary-icon">
+                                    <i class="bi bi-cart-check-fill"></i>
+                                </div>
+                                <div class="financial-summary-content">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h6 class="mb-0 en">Guilt-free spending</h6>
+                                        <h6 class="mb-0 pt" style="display:none;">Gastos sem culpa</h6>
+                                        <span class="badge bg-info rounded-pill">$950</span>
+                                    </div>
+                                    <div class="progress mt-2" style="height: 6px;">
+                                        <div class="progress-bar bg-info" role="progressbar" style="width: 45%" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="text-center mt-4">
                             <button class="btn btn-outline-warning btn-sm w-100">
@@ -226,15 +277,39 @@
                     </div>
                 </div>
                 <!-- Investments Section -->
-                <div class="card mb-4" id="investments">
+                <div class="card mb-4 dashboard-card" id="investments">
                     <div class="card-header">
-                        <span class="en">Investments</span>
-                        <span class="pt" style="display:none;">Investimentos</span>
+                        <div class="section-title">
+                            <i class="bi bi-graph-up-arrow"></i>
+                            <span class="en">Investments</span>
+                            <span class="pt" style="display:none;">Investimentos</span>
+                        </div>
                     </div>
                     <div class="card-body">
-                        <p class="en">Track your investment growth and make informed decisions for your future.</p>
-                        <p class="pt" style="display:none;">Acompanhe o crescimento dos seus investimentos e tome decisões informadas para seu futuro.</p>
-                    </div>
+                        <div class="financial-summary-card">
+                            <div class="financial-summary-icon">
+                                <i class="bi bi-bank"></i>
+                            </div>
+                            <div class="financial-summary-content w-100">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h6 class="mb-0">Index Funds</h6>
+                                    <span class="badge bg-success rounded-pill">$85,000</span>
+                                </div>
+                                <small class="text-muted">+12.5% YTD</small>
+                            </div>
+                        </div>
+                        <div class="financial-summary-card">
+                            <div class="financial-summary-icon">
+                                <i class="bi bi-house-fill"></i>
+                            </div>
+                            <div class="financial-summary-content w-100">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h6 class="mb-0">Real Estate</h6>
+                                    <span class="badge bg-primary rounded-pill">$150,000</span>
+                                </div>
+                                <small class="text-muted">+8.3% YTD</small>
+                            </div>
+                        </div>
                 </div>
             </div>
         </div>
