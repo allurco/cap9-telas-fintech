@@ -2,24 +2,53 @@
 // ------------------------------------------
 // This file centralizes all interactive logic for dashboard pages.
 // It handles language switching, theme toggling, sidebar (burger menu) logic, and general UI behaviors.
+// Provides a global namespace (window.vidaRica) for core functions
 // ------------------------------------------
 
+// Create global namespace for Vida Rica functions
+window.vidaRica = {};
+
 // === Language Detection & Switching ===
-function setLanguage(lang) {
-    var enEls = document.querySelectorAll('.en');
-    var ptEls = document.querySelectorAll('.pt');
-    if (lang === 'pt') {
-        enEls.forEach(el => el.style.display = 'none');
-        ptEls.forEach(el => el.style.display = '');
-    } else {
-        enEls.forEach(el => el.style.display = '');
-        ptEls.forEach(el => el.style.display = 'none');
+window.vidaRica.setLanguage = function(lang) {
+    // Validate the language code
+    if (lang !== 'en' && lang !== 'pt') {
+        console.error('Invalid language code. Supported languages are: en, pt');
+        return;
     }
+    
+    // Store the language preference
     localStorage.setItem('lang', lang);
+    
+    // If we have the new translation system available, use it
+    if (typeof window.vidaRica.applyTranslations === 'function') {
+        window.vidaRica.applyTranslations(lang);
+    } else if (typeof applyTranslations === 'function') {
+        applyTranslations(lang);
+    } else {
+        // Legacy fallback using class-based approach
+        var enEls = document.querySelectorAll('.en');
+        var ptEls = document.querySelectorAll('.pt');
+        if (lang === 'pt') {
+            enEls.forEach(el => el.style.display = 'none');
+            ptEls.forEach(el => el.style.display = '');
+        } else {
+            enEls.forEach(el => el.style.display = '');
+            ptEls.forEach(el => el.style.display = 'none');
+        }
+    }
+    
+    // Trigger a custom event that other parts of the app can listen for
+    const event = new CustomEvent('languageChanged', { detail: { language: lang } });
+    document.dispatchEvent(event);
+};
+
+// Legacy function for backward compatibility
+function setLanguage(lang) {
+    window.vidaRica.setLanguage(lang);
 }
 
 // === Theme Toggling ===
-function setTheme(theme) {
+window.vidaRica.setTheme = function(theme) {
     // Update body class
     if (theme === 'light') {
         document.body.classList.add('light-mode');
@@ -39,6 +68,11 @@ function setTheme(theme) {
     
     // Store preference
     localStorage.setItem('theme', theme);
+};
+
+// Legacy function for backward compatibility
+function setTheme(theme) {
+    window.vidaRica.setTheme(theme);
 }
 
 // === Sidebar (Burger Menu) Logic ===
@@ -61,6 +95,25 @@ window.addEventListener('resize', function() {
     if(window.innerWidth > 767) closeSidebar();
 });
 
+// Add the translation functionality to the global namespace
+if (typeof applyTranslations === 'function') {
+    window.vidaRica.applyTranslations = applyTranslations;
+} else {
+    // Create a basic implementation if the function doesn't exist
+    window.vidaRica.applyTranslations = function(lang) {
+        const enEls = document.querySelectorAll('.en');
+        const ptEls = document.querySelectorAll('.pt');
+        
+        if (lang === 'pt') {
+            enEls.forEach(el => el.style.display = 'none');
+            ptEls.forEach(el => el.style.display = '');
+        } else {
+            enEls.forEach(el => el.style.display = '');
+            ptEls.forEach(el => el.style.display = 'none');
+        }
+    };
+}
+
 // Initialize when the document is ready
 document.addEventListener('DOMContentLoaded', function() {
     // On load, set language and theme
@@ -69,11 +122,11 @@ document.addEventListener('DOMContentLoaded', function() {
         // Default to browser language or English
         lang = (navigator.language || navigator.userLanguage).startsWith('pt') ? 'pt' : 'en';
     }
-    setLanguage(lang);
+    window.vidaRica.setLanguage(lang);
     
     // Apply saved theme or default to dark
     var theme = localStorage.getItem('theme') || 'dark';
-    setTheme(theme);
+    window.vidaRica.setTheme(theme);
     
     // Language switcher
     var langSwitcher = document.getElementById('langSwitcher');

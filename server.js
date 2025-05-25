@@ -39,6 +39,10 @@ app.get('/investimentos', (req, res) => {
     res.sendFile(path.join(__dirname, 'investimentos.html'));
 });
 
+app.get('/settings', (req, res) => {
+    res.sendFile(path.join(__dirname, 'settings.html'));
+});
+
 // Handle 404
 app.use((req, res) => {
   res.status(404).sendFile(path.join(__dirname, '404.html'));

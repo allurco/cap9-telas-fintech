@@ -1,0 +1,82 @@
+/* Settings page specific styles */
+/* Fix light mode color issues for settings page */
+
+/* Ensure icons are properly displayed */
+.bi {
+    display: inline-block !important;
+    vertical-align: -0.125em;
+}
+
+.nav-link .bi {
+    margin-right: 0.5rem;
+    font-size: 1.2em;
+}
+
+body.dashboard.light-mode .sidebar .nav-link .bi {
+    color: var(--blue-dark);
+}
+
+body.dashboard.light-mode .settings-container .card {
+    background-color: var(--light-card);
+    color: var(--light-text);
+    border: 1px solid #ced4da;
+}
+
+/* Fix radio buttons in light mode */
+body.dashboard.light-mode .form-check-input {
+    background-color: #fff;
+    border: 1px solid #adb5bd;
+    box-shadow: 0 0 0 0.1rem rgba(0, 0, 0, 0.1);
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+body.dashboard.light-mode .form-check-input:checked {
+    background-color: var(--gold);
+    border-color: var(--gold-dark);
+    box-shadow: 0 0 0 0.1rem rgba(218, 190, 114, 0.25);
+}
+
+body.dashboard.light-mode .settings-container .card-header {
+    background-color: #f8f9fa;
+    color: var(--gold-dark);
+    border-color: #e3e3e3;
+}
+
+body.dashboard.light-mode .settings-section h6 {
+    color: var(--light-text);
+}
+
+body.dashboard.light-mode .form-check-label {
+    color: var(--light-text);
+}
+
+body.dashboard.light-mode .language-options, 
+body.dashboard.light-mode .theme-options {
+    color: var(--light-text);
+}
+
+/* Ensure button colors are visible in light mode */
+body.dashboard.light-mode .btn-gold {
+    background-color: var(--gold);
+    color: var(--gold-dark);
+    font-weight: 500;
+}
+
+body.dashboard.light-mode .btn-gold:hover {
+    background-color: #c9ad60;
+    color: var(--gold-dark);
+}
+
+/* Fix alert colors in light mode */
+body.dashboard.light-mode .alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border-color: #c3e6cb;
+}
+
+/* Enhance focus states for accessibility */
+body.dashboard.light-mode .form-check-input:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 0.25rem rgba(218, 190, 114, 0.25);
+}
