@@ -911,6 +911,51 @@ body {
     margin-left: 0.25rem;
 }
 
+/* Success message styling */
+.alert-success {
+    background-color: rgba(146, 216, 124, 0.15) !important;
+    color: var(--state-success) !important;
+    border-radius: var(--radius-md) !important;
+    padding: 0.75rem 1rem !important;
+    font-weight: 500 !important;
+    box-shadow: var(--shadow-sm) !important;
+    border-left: 3px solid var(--state-success) !important;
+}
+
+.alert-success .bi {
+    font-size: 1.2rem;
+    color: var(--state-success);
+}
+
+/* Link styling */
+.gold-link {
+    color: var(--gold);
+    text-decoration: none;
+    font-weight: 500;
+    transition: all var(--transition-fast);
+    position: relative;
+}
+
+.gold-link:hover {
+    color: var(--gold);
+    text-decoration: none;
+}
+
+.gold-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 1px;
+    bottom: -2px;
+    left: 0;
+    background-color: var(--gold);
+    transition: width var(--transition-fast);
+}
+
+.gold-link:hover::after {
+    width: 100%;
+}
+
 /* Buttons */
 body.no-scroll {
     overflow: hidden !important;

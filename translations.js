@@ -48,7 +48,8 @@ const translations = {
       login: "Sign in",
       invalidName: "Name must be at least 3 characters long",
       invalidEmail: "Invalid email format",
-      invalidPhone: "Invalid phone format"
+      invalidPhone: "Invalid phone format",
+      successMessage: "Information validated successfully!"
     },
     // Navigation items
     nav: {
@@ -233,7 +234,8 @@ const translations = {
       login: "Entrar",
       invalidName: "Nome deve ter pelo menos 3 caracteres",
       invalidEmail: "Formato de e-mail inválido",
-      invalidPhone: "Formato de telefone inválido"
+      invalidPhone: "Formato de telefone inválido",
+      successMessage: "Informações validadas com sucesso!"
     },
     // Navigation items
     nav: {

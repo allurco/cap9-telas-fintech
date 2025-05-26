@@ -17,6 +17,13 @@
         <h2 class="text-light mb-4" data-i18n="register.heading">Crie sua conta</h2>
         
         <form action="password.html" method="GET" class="text-center d-flex flex-column align-items-center w-100" style="max-width: 320px;" id="registerForm" novalidate>
+            <!-- Success Message (hidden by default) -->
+            <div class="success-message mb-3 w-100 d-none" id="registrationSuccess">
+                <div class="alert alert-success border-0 d-flex align-items-center" role="alert">
+                    <i class="bi bi-check-circle-fill me-2"></i>
+                    <span data-i18n="register.successMessage">Informações validadas com sucesso!</span>
+                </div>
+            </div>
             <!-- Name Field -->
             <div class="mb-3 w-100">
                 <input type="text" class="form-control form-control-lg" id="name" name="name" required data-i18n-placeholder="register.namePlaceholder" placeholder="NOME COMPLETO">
@@ -101,9 +108,22 @@
                     localStorage.setItem('registerEmail', emailInput.value.trim());
                     localStorage.setItem('registerPhone', phoneInput.value.trim());
                     
-                    // Append email to the URL for the OTP verification page
-                    const redirectUrl = `password.html?email=${encodeURIComponent(emailInput.value.trim())}&isRegistration=true`;
-                    window.location.href = redirectUrl;
+                    // Show success message
+                    const successMessage = document.getElementById('registrationSuccess');
+                    successMessage.classList.remove('d-none');
+                    
+                    // Disable form inputs and button while showing success message
+                    nameInput.disabled = true;
+                    emailInput.disabled = true;
+                    phoneInput.disabled = true;
+                    document.querySelector('button[type="submit"]').disabled = true;
+                    
+                    // Redirect after a short delay to allow user to see the success message
+                    setTimeout(() => {
+                        // Append email to the URL for the OTP verification page
+                        const redirectUrl = `password.html?email=${encodeURIComponent(emailInput.value.trim())}&isRegistration=true`;
+                        window.location.href = redirectUrl;
+                    }, 1500); // 1.5 second delay
                 }
             });
         });
