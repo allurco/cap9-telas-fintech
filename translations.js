@@ -15,16 +15,40 @@ const translations = {
       validateAccess: "ACCESS",
       loginWithGoogle: "Login with Google",
       loginWithLinkedIn: "Login with LinkedIn",
-      loginWithFacebook: "Login with Facebook"
+      loginWithFacebook: "Login with Facebook",
+      noAccount: "Don't have an account?",
+      register: "Sign up",
+      invalidEmail: "Invalid email format",
+      invalidPhone: "Invalid phone format"
     },
     
     // Password page
     password: {
       title: "Vida Rica - Access Code",
+      verifyHeading: "Verify your access",
       codeMessage: "A 6-character code has been sent to your Phone/Email",
+      registrationMessage: "Verify your identity with the code sent to your email",
       resendCode: "Didn't receive? Resend code",
       verifyCode: "VERIFY CODE",
-      returnToLogin: "Return to login"
+      returnToLogin: "Return to login",
+      returnToRegister: "Return to registration",
+      verifyRegistrationHeading: "Complete your registration",
+      invalidCode: "Invalid code. Please try again."
+    },
+    
+    // Registration page
+    register: {
+      title: "Vida Rica - Registration",
+      heading: "Create your account",
+      namePlaceholder: "FULL NAME",
+      emailPlaceholder: "EMAIL",
+      phonePlaceholder: "PHONE",
+      submit: "CREATE ACCOUNT",
+      alreadyHaveAccount: "Already have an account?",
+      login: "Sign in",
+      invalidName: "Name must be at least 3 characters long",
+      invalidEmail: "Invalid email format",
+      invalidPhone: "Invalid phone format"
     },
     // Navigation items
     nav: {
@@ -176,16 +200,40 @@ const translations = {
       validateAccess: "VALIDAR ACESSO",
       loginWithGoogle: "Login com Google",
       loginWithLinkedIn: "Login com LinkedIn",
-      loginWithFacebook: "Login com Facebook"
+      loginWithFacebook: "Login com Facebook",
+      noAccount: "Não possui uma conta?",
+      register: "Cadastre-se",
+      invalidEmail: "Formato de e-mail inválido",
+      invalidPhone: "Formato de telefone inválido"
     },
     
     // Password page
     password: {
       title: "Vida Rica - Código de Acesso",
-      codeMessage: "Um Código de 6 caracteres foi enviado para o seu Telefone/Email",
+      verifyHeading: "Verifique seu acesso",
+      codeMessage: "Um código de 6 dígitos foi enviado para seu telefone/e-mail",
+      registrationMessage: "Verifique sua identidade com o código enviado para seu e-mail",
       resendCode: "Não recebeu? Reenviar código",
       verifyCode: "VERIFICAR CÓDIGO",
-      returnToLogin: "Voltar para login"
+      returnToLogin: "Voltar para login",
+      returnToRegister: "Voltar para cadastro",
+      verifyRegistrationHeading: "Finalize seu cadastro",
+      invalidCode: "Código inválido. Por favor, tente novamente."
+    },
+    
+    // Registration page
+    register: {
+      title: "Vida Rica - Cadastro",
+      heading: "Crie sua conta",
+      namePlaceholder: "NOME COMPLETO",
+      emailPlaceholder: "E-MAIL",
+      phonePlaceholder: "TELEFONE",
+      submit: "CRIAR CONTA",
+      alreadyHaveAccount: "Já possui uma conta?",
+      login: "Entrar",
+      invalidName: "Nome deve ter pelo menos 3 caracteres",
+      invalidEmail: "Formato de e-mail inválido",
+      invalidPhone: "Formato de telefone inválido"
     },
     // Navigation items
     nav: {
